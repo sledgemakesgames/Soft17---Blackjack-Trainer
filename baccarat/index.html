@@ -155,8 +155,8 @@ body.tooltips-off .term .tip{display:none !important;}
 .bet-spot .spot-label{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;margin-bottom:3px;}
 .bet-spot .spot-odds{font-size:10px;color:var(--text-muted);margin-bottom:8px;}
 .bet-spot .spot-chips{display:flex;justify-content:center;gap:2px;min-height:18px;margin-bottom:4px;}
-.bet-spot .spot-amt{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;color:var(--brass-bright);min-height:17px;}
-.bet-spot .spot-hint{font-size:9.5px;color:var(--text-muted);opacity:0;margin-top:2px;}
+.bet-spot .spot-amt{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;color:var(--brass-bright);min-height:17px;white-space:nowrap;}
+.bet-spot .spot-hint{font-size:9.5px;color:var(--text-muted);opacity:0;margin-top:2px;white-space:nowrap;}
 .bet-spot:hover .spot-hint{opacity:1;}
 
 .side-betting-row{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:2px 0 6px;}
@@ -165,7 +165,7 @@ body.tooltips-off .term .tip{display:none !important;}
 .side-spot.has-bet{border-color:var(--brass);border-style:solid;background:rgba(214,169,75,0.08);}
 .side-spot .spot-label{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12px;margin-bottom:2px;}
 .side-spot .spot-odds{font-size:10px;color:var(--text-muted);margin-bottom:4px;}
-.side-spot .spot-amt{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:var(--brass-bright);}
+.side-spot .spot-amt{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:var(--brass-bright);white-space:nowrap;}
 
 .chip-row{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;}
 .chip{width:40px;height:40px;border-radius:50%;padding:0;border:2px solid rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;font-family:'Space Grotesk',sans-serif;color:#fff;flex-shrink:0;box-shadow:0 3px 8px -3px rgba(0,0,0,0.5);cursor:pointer;transition:transform 120ms ease;}
@@ -340,21 +340,21 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
       <div class="spot-odds">Pays 1:1</div>
       <div class="spot-chips" id="chips-player"></div>
       <div class="spot-amt" id="amt-player"></div>
-      <div class="spot-hint">Click to bet <span id="hint-player-chip">$25</span></div>
+      <div class="spot-hint">Bet <span id="hint-player-chip">$25</span></div>
     </div>
     <div class="bet-spot" id="spot-tie" data-spot="tie" tabindex="0" role="button" aria-label="Bet on Tie, pays 8 to 1">
       <div class="spot-label">Tie</div>
       <div class="spot-odds">Pays 8:1</div>
       <div class="spot-chips" id="chips-tie"></div>
       <div class="spot-amt" id="amt-tie"></div>
-      <div class="spot-hint">Click to bet <span id="hint-tie-chip">$25</span></div>
+      <div class="spot-hint">Bet <span id="hint-tie-chip">$25</span></div>
     </div>
     <div class="bet-spot" id="spot-banker" data-spot="banker" tabindex="0" role="button" aria-label="Bet on Banker, pays 1 to 1, 7 pushes">
       <div class="spot-label">Banker</div>
       <div class="spot-odds" id="banker-odds-label">Pays 1:1 (7 pushes)</div>
       <div class="spot-chips" id="chips-banker"></div>
       <div class="spot-amt" id="amt-banker"></div>
-      <div class="spot-hint">Click to bet <span id="hint-banker-chip">$25</span></div>
+      <div class="spot-hint">Bet <span id="hint-banker-chip">$25</span></div>
     </div>
   </div>
 
