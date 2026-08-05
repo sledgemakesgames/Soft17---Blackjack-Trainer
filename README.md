@@ -1,6 +1,6 @@
 # Table Ready
 
-A free, browser-based blackjack strategy trainer — built to help new players get comfortable with real casino blackjack, one hand at a time without any account needed or payment.
+A free, browser-based casino strategy trainer — built to help new players get comfortable with real casino blackjack, one hand at a time without any account needed or payment.
 
 ## Why this exists
 
