@@ -44,7 +44,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start;flex-wr
 .bankroll-pill .label{font-size:10.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-right:2px;}
 .bankroll-pill .amount{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;}
 button{font-family:'Inter',sans-serif;cursor:pointer;border-radius:9px;border:1px solid var(--line);background:var(--panel-2);color:var(--text);padding:9px 14px;font-size:13px;font-weight:500;transition:background 140ms ease,border-color 140ms ease,transform 80ms ease;}
-button:hover{background:#24272D;border-color:rgba(237,238,240,0.18);}
+button:not(.chip):hover{background:#24272D;border-color:rgba(237,238,240,0.18);}
 button:active{transform:scale(0.97);}
 button:disabled{opacity:0.32;cursor:default;}
 button.primary{background:var(--brass);border-color:var(--brass);color:#20160A;font-weight:600;}
@@ -150,7 +150,7 @@ h2.section{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px
 .chip{width:40px;height:40px;border-radius:50%;padding:0;border:2px solid rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;font-family:'Space Grotesk',sans-serif;color:#fff;flex-shrink:0;box-shadow:0 3px 8px -3px rgba(0,0,0,0.5);}
 .chip:hover{transform:translateY(-3px);}
 .chip.selected{border-color:var(--brass-bright);box-shadow:0 0 0 2px rgba(240,196,107,0.35);}
-.chip-5{background:#B33F3F;} .chip-10{background:#2F6FB0;} .chip-25{background:#2E8F63;} .chip-50{background:#3A3D44;} .chip-100{background:#7C5CC4;}
+.chip-5{background:#B33F3F;} .chip-10{background:#2F6FB0;} .chip-25{background:#2E8F63;} .chip-50{background:#3A3D44;} .chip-100{background:#7C5CC4;} .chip-500{background:#EDEDE6;color:#1A1A1A;border-color:rgba(0,0,0,0.25);} .chip-1000{background:#D97B29;}
 .bet-value-input{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;width:70px;text-align:center;}
 .stepper{width:30px;height:30px;padding:0;border-radius:50%;font-size:16px;line-height:1;}
 .bankroll-empty-banner{background:rgba(225,93,69,0.10);border:1px solid rgba(225,93,69,0.3);border-radius:11px;padding:12px 14px;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
@@ -352,6 +352,8 @@ h2.section{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px
         <button class="chip chip-25" id="chip-25">25</button>
         <button class="chip chip-50" id="chip-50">50</button>
         <button class="chip chip-100" id="chip-100">100</button>
+        <button class="chip chip-500" id="chip-500">500</button>
+        <button class="chip chip-1000" id="chip-1000">1K</button>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
         <button class="stepper" id="bet-minus">−</button>
@@ -430,7 +432,8 @@ h2.section{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px
   <p class="foot-note">This is baseline basic strategy for a dealer-stands-on-soft-17 game. A few count-based deviations (the most valuable ones — insurance, 16 vs 10, 15 vs 10, 10 vs 10) are called out live in the feedback when your true count crosses their index.</p>
 </div>
 
-<p class="foot-note" style="text-align:center;opacity:0.6;margin-top:8px;">© 2026 SledgeMakesGames. All rights reserved to the extent permitted by applicable law.</p>
+<p class="foot-note" style="text-align:center;opacity:0.6;margin-top:8px;">For education only — a free practice table, not real-money gambling.</p>
+<p class="foot-note" style="text-align:center;opacity:0.6;margin-top:4px;">© 2026 SledgeMakesGames. All rights reserved to the extent permitted by applicable law.</p>
 
 </div>
 
@@ -1229,13 +1232,13 @@ document.getElementById('btn-manners-close').addEventListener('click', function(
 function setBet(amount){
   amount = Math.max(0, amount);
   document.getElementById('bet-amount').value = amount;
-  ['5','10','25','50','100'].forEach(function(v){
+  ['5','10','25','50','100','500','1000'].forEach(function(v){
     document.getElementById('chip-'+v).classList.toggle('selected', parseInt(v,10)===amount);
   });
   sfxChip();
   renderBetTip();
 }
-[5,10,25,50,100].forEach(function(v){
+[5,10,25,50,100,500,1000].forEach(function(v){
   document.getElementById('chip-'+v).addEventListener('click', function(){
     var current=parseInt(document.getElementById('bet-amount').value,10)||0;
     setBet(current+v);
@@ -1245,7 +1248,7 @@ document.getElementById('bet-plus').addEventListener('click', function(){ setBet
 document.getElementById('bet-minus').addEventListener('click', function(){ setBet((parseInt(document.getElementById('bet-amount').value,10)||0)-5); });
 document.getElementById('bet-amount').addEventListener('input', function(){
   var v=parseInt(this.value,10)||0;
-  ['5','10','25','50','100'].forEach(function(c){ document.getElementById('chip-'+c).classList.toggle('selected', parseInt(c,10)===v); });
+  ['5','10','25','50','100','500','1000'].forEach(function(c){ document.getElementById('chip-'+c).classList.toggle('selected', parseInt(c,10)===v); });
   renderBetTip();
 });
 document.getElementById('bet-clear').addEventListener('click', function(){ setBet(0); });
@@ -1352,7 +1355,7 @@ function syncCardsRow(container, cards, hideFn){
 }
 
 function computeChipBreakdown(amount){
-  var denoms=[100,50,25,10,5,1];
+  var denoms=[1000,500,100,50,25,10,5,1];
   var counts=[];
   var remaining=Math.max(0, Math.round(amount));
   var maxChips=14;
@@ -1366,6 +1369,8 @@ function computeChipBreakdown(amount){
   return counts;
 }
 function chipColorClass(d){
+  if(d>=1000) return 'chip-1000';
+  if(d>=500) return 'chip-500';
   if(d>=100) return 'chip-100';
   if(d>=50) return 'chip-50';
   if(d>=25) return 'chip-25';
