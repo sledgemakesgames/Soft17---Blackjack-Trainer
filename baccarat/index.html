@@ -172,16 +172,18 @@ body.tooltips-off .term .tip{display:none !important;}
 .chip:hover{transform:translateY(-3px);}
 .chip.selected{border-color:var(--brass-bright);box-shadow:0 0 0 2px rgba(240,196,107,0.35);}
 #btn-all-in.all-in-active{border-color:var(--brass-bright);color:var(--brass-bright);box-shadow:0 0 0 2px rgba(240,196,107,0.35);}
-.chip-5{background:#B33F3F;} .chip-10{background:#2F6FB0;} .chip-25{background:#2E8F63;} .chip-50{background:#3A3D44;} .chip-100{background:#7C5CC4;}
+.chip-5{background:#B33F3F;} .chip-10{background:#2F6FB0;} .chip-25{background:#2E8F63;} .chip-50{background:#3A3D44;} .chip-100{background:#7C5CC4;} .chip-500{background:#EDEDE6;color:#1A1A1A;border-color:rgba(0,0,0,0.25);} .chip-1000{background:#D97B29;}
 .mini-chip{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.28);margin-left:-7px;box-shadow:0 2px 4px -2px rgba(0,0,0,0.5);}
 .mini-chip:first-child{margin-left:0;}
 .chip-hint{text-align:center;font-size:11.5px;color:var(--text-muted);margin-bottom:8px;}
+.hint-line{font-size:12px;color:var(--brass-bright);font-style:italic;text-align:center;margin:4px 0;opacity:0;transition:opacity 400ms ease;}
 .chip-hint b{color:var(--brass-bright);}
 
 .deal-row{display:flex;justify-content:center;gap:10px;margin-bottom:6px;}
 
 .stats-flat{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 18px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);}
 .stat-item{font-size:12px;color:var(--text-muted);white-space:nowrap;}
+.bankroll-empty-banner{background:rgba(225,93,69,0.10);border:1px solid rgba(225,93,69,0.3);border-radius:11px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
 .stat-item .sv{color:var(--text);font-weight:600;font-family:'Space Grotesk',sans-serif;margin-left:5px;}
 
 footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-muted);}
@@ -192,6 +194,11 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
   .card-idx{font-size:15px;}
   .card-idx .pip{font-size:12px;}
   .card-pip{font-size:24px;}
+  .bet-spot{min-width:0;flex:1 1 88px;padding:11px 10px;}
+  .betting-row{gap:8px;}
+  .side-spot{min-width:0;flex:1 1 76px;padding:8px 8px;}
+  .side-betting-row{gap:8px;}
+  .board-tab{padding:5px 8px;font-size:10.5px;}
 }
 @media (prefers-reduced-motion: reduce){
   .card,.flip-card{transition:none !important;}
@@ -211,6 +218,7 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
   <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
     <div class="bankroll-pill"><span class="label">Bankroll</span><span class="pill-chip-stack" id="bankroll-chip-stack"></span><span class="amount" id="bankroll-amount">$1,000</span></div>
     <button id="btn-toggle-settings">Table settings</button>
+    <a href="#" id="btn-manners" style="font-size:11.5px;color:var(--text-muted);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Table manners</a>
   </div>
 </header>
 
@@ -244,7 +252,9 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
       <div class="check-row"><input type="checkbox" id="set-sound" checked><label for="set-sound">Sound effects</label></div>
       <div class="check-row"><input type="checkbox" id="set-tooltips" checked><label for="set-tooltips">Term tooltips</label></div>
       <div class="check-row"><input type="checkbox" id="set-showodds" checked><label for="set-showodds">Live win odds</label></div>
+      <div class="check-row"><input type="checkbox" id="set-quizmode"><label for="set-quizmode"><span class="term">Predict the draw<span class="tip">Before each third card is dealt, guess whether that side draws or stands — then see if you were right.</span></span></label></div>
       <div class="check-row"><input type="checkbox" id="set-turbo"><label for="set-turbo">Turbo — deal face up, skip flipping</label></div>
+      <button id="btn-reset-bankroll-settings" style="margin-top:8px;">Reset bankroll to 1000</button>
       <label style="display:block;font-size:13px;margin:10px 0 6px;">Theme</label>
       <select id="set-theme">
         <option value="graphite">Graphite</option>
@@ -257,6 +267,11 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
 </div>
 
 <div class="table-felt">
+  <div id="bankroll-empty" class="bankroll-empty-banner" style="display:none;">
+    <span style="font-size:13.5px;">You're out of chips. This is a free practice table — reset your bankroll to keep going.</span>
+    <button class="primary" id="btn-reset-bankroll">Reset bankroll to 1000</button>
+  </div>
+  <p class="hint-line" id="hint-goal" style="display:none;">Banker and Player are just two hands — bet on whichever gets closer to 9.</p>
   <div class="hands-grid">
     <div class="hand-box" id="banker-box">
       <div class="hb-top">
@@ -273,6 +288,17 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
       <div class="hb-cards" id="player-cards"></div>
     </div>
   </div>
+  <p class="hint-line" id="hint-flip" style="display:none;">Cards deal face down — click each one to flip it and see what's inside.</p>
+
+  <div class="why-panel" id="quiz-prompt" style="display:none;text-align:center;">
+    <p id="quiz-question" style="margin:0 0 12px;font-weight:600;color:var(--text);"></p>
+    <div id="quiz-buttons" style="display:flex;gap:10px;justify-content:center;">
+      <button class="primary" id="quiz-yes">Yes, draws</button>
+      <button id="quiz-no">No, stands</button>
+    </div>
+    <p id="quiz-feedback" style="margin-top:10px;display:none;color:var(--text-muted);"></p>
+  </div>
+  <div class="why-panel" id="third-card-note" style="display:none;"></div>
 
   <div class="outcome-badge" id="outcome-badge"></div>
   <div class="why-panel" id="why-panel"></div>
@@ -309,21 +335,21 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
   <div id="odds-panel" style="display:none;text-align:center;margin:0 0 10px;font-size:12.5px;color:var(--text-muted);"></div>
 
   <div class="betting-row" id="betting-row">
-    <div class="bet-spot" id="spot-player" data-spot="player">
+    <div class="bet-spot" id="spot-player" data-spot="player" tabindex="0" role="button" aria-label="Bet on Player, pays 1 to 1">
       <div class="spot-label">Player</div>
       <div class="spot-odds">Pays 1:1</div>
       <div class="spot-chips" id="chips-player"></div>
       <div class="spot-amt" id="amt-player"></div>
       <div class="spot-hint">Click to bet <span id="hint-player-chip">$25</span></div>
     </div>
-    <div class="bet-spot" id="spot-tie" data-spot="tie">
+    <div class="bet-spot" id="spot-tie" data-spot="tie" tabindex="0" role="button" aria-label="Bet on Tie, pays 8 to 1">
       <div class="spot-label">Tie</div>
       <div class="spot-odds">Pays 8:1</div>
       <div class="spot-chips" id="chips-tie"></div>
       <div class="spot-amt" id="amt-tie"></div>
       <div class="spot-hint">Click to bet <span id="hint-tie-chip">$25</span></div>
     </div>
-    <div class="bet-spot" id="spot-banker" data-spot="banker">
+    <div class="bet-spot" id="spot-banker" data-spot="banker" tabindex="0" role="button" aria-label="Bet on Banker, pays 1 to 1, 7 pushes">
       <div class="spot-label">Banker</div>
       <div class="spot-odds" id="banker-odds-label">Pays 1:1 (7 pushes)</div>
       <div class="spot-chips" id="chips-banker"></div>
@@ -333,22 +359,22 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
   </div>
 
   <div class="side-betting-row" id="side-betting-row" style="display:none;">
-    <div class="side-spot" id="side-spot-dragon7" data-spot="dragon7" style="display:none;">
+    <div class="side-spot" id="side-spot-dragon7" data-spot="dragon7" tabindex="0" role="button" aria-label="Bet on Dragon 7, pays 40 to 1" style="display:none;">
       <div class="spot-label">Dragon 7</div>
       <div class="spot-odds">40:1</div>
       <div class="spot-amt" id="amt-dragon7">$0</div>
     </div>
-    <div class="side-spot" id="side-spot-panda8" data-spot="panda8" style="display:none;">
+    <div class="side-spot" id="side-spot-panda8" data-spot="panda8" tabindex="0" role="button" aria-label="Bet on Panda 8, pays 25 to 1" style="display:none;">
       <div class="spot-label">Panda 8</div>
       <div class="spot-odds">25:1</div>
       <div class="spot-amt" id="amt-panda8">$0</div>
     </div>
-    <div class="side-spot" id="side-spot-dragonP" data-spot="dragonP" style="display:none;">
+    <div class="side-spot" id="side-spot-dragonP" data-spot="dragonP" tabindex="0" role="button" aria-label="Bet on Dragon Bonus Player, pays up to 30 to 1" style="display:none;">
       <div class="spot-label">Dragon Bonus P</div>
       <div class="spot-odds">Up to 30:1</div>
       <div class="spot-amt" id="amt-dragonP">$0</div>
     </div>
-    <div class="side-spot" id="side-spot-dragonB" data-spot="dragonB" style="display:none;">
+    <div class="side-spot" id="side-spot-dragonB" data-spot="dragonB" tabindex="0" role="button" aria-label="Bet on Dragon Bonus Banker, pays up to 30 to 1" style="display:none;">
       <div class="spot-label">Dragon Bonus B</div>
       <div class="spot-odds">Up to 30:1</div>
       <div class="spot-amt" id="amt-dragonB">$0</div>
@@ -361,9 +387,14 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
     <button class="chip chip-25 selected" data-chip="25">25</button>
     <button class="chip chip-50" data-chip="50">50</button>
     <button class="chip chip-100" data-chip="100">100</button>
+    <button class="chip chip-500" data-chip="500">500</button>
+    <button class="chip chip-1000" data-chip="1000">1K</button>
+    <button id="btn-bet-half" style="font-size:12px;">½x</button>
+    <button id="btn-bet-double" style="font-size:12px;">2x</button>
     <button id="btn-clear-bets">Clear bets</button>
     <button id="btn-all-in">All in</button>
   </div>
+  <p class="hint-line" id="hint-chips" style="display:none;">These are your chips — pick one, then click a table spot to bet it.</p>
   <p class="chip-hint">Pick a chip, then click a betting spot to place it. Right-click a spot to remove one chip. Currently holding <b id="active-chip-label">$25</b>.</p>
 
   <div class="deal-row">
@@ -371,9 +402,22 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
   </div>
 
   <div id="stats-grid" class="stats-flat"></div>
+
+  <div id="manners-overlay" style="display:none;position:absolute;inset:0;background:rgba(6,7,8,0.94);border-radius:20px;z-index:22;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;">
+    <p style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;margin:0 0 6px;">Table manners</p>
+    <p style="font-size:12.5px;color:var(--text-muted);margin:0 0 18px;max-width:340px;">A few real-table habits worth knowing before you sit down at baccarat.</p>
+    <ul style="text-align:left;max-width:360px;margin:0 0 20px;padding:0 0 0 18px;font-size:13px;line-height:1.7;color:var(--text);">
+      <li>At mini-baccarat (the most common format) the dealer flips every card immediately — don't touch them. At bigger tables, the player with the largest bet may get to "squeeze" and slowly reveal their own cards, a real tradition, but check that it's allowed at your table first.</li>
+      <li>Once the dealer calls "no more bets," keep your hands off your chips until the hand resolves.</li>
+      <li>Chips go in the marked betting area — never handed straight to the dealer.</li>
+      <li>In commission games, the dealer tracks what you owe on the rail. You settle up when you leave or when asked, not after every hand.</li>
+      <li>Tipping the dealer (a "toke") is optional but common in North American casinos — place a chip near your bet and let them know it's for them.</li>
+    </ul>
+    <button id="btn-manners-close" class="primary">Got it</button>
+  </div>
 </div>
 
-<footer>© 2026 SledgeMakesGames. All rights reserved.</footer>
+<footer>For education only — a free practice table, not real-money gambling.<br>© 2026 SledgeMakesGames. All rights reserved.</footer>
 </div>
 
 <script>
@@ -647,8 +691,9 @@ var G={
   activeChip:25,
   commissionMode:false, sideDragon7:false, sidePanda8:false, sideDragonBonus:false,
   soundOn:true, tooltipsEnabled:true, turbo:false,
-  hands:null, result:null, showFeedback:false,
-  initialFlipped:0, thirdFlipped:0, thirdNeeded:0,
+  hands:null, result:null, showFeedback:false, seenChipsHint:false, seenBasicsHint:false, lastBets:null,
+  initialFlipped:0, thirdFlipped:0, thirdNeeded:0, bankerThirdPending:false,
+  quizMode:false, quizAwaiting:null, quizProceedFn:null, quizStats:{correct:0,total:0},
   bankerRevealed:[], playerRevealed:[],
   stats:{hands:0,net:0,banker:0,player:0,tie:0}, roadHistory:[], bigRoad:[], handHistory:[], activeBoard:'big'
 };
@@ -701,10 +746,55 @@ function saveSharedBankroll(){
   try{ localStorage.setItem(HOUSE_BANKROLL_KEY, JSON.stringify({balance:G.bankroll,lastUpdated:new Date().toISOString()})); }catch(e){}
 }
 
+/* ============ ONBOARDING HINTS (subtle, first-time-only, never repeat) ============ */
+var HINTS_KEY='house_edge_baccarat_hints_v1';
+function loadHintsSeen(){
+  if(!hasStorage()) return;
+  try{
+    var raw=localStorage.getItem(HINTS_KEY);
+    if(!raw) return;
+    var parsed=JSON.parse(raw);
+    G.seenChipsHint=!!parsed.seenChipsHint;
+    G.seenBasicsHint=!!parsed.seenBasicsHint;
+  }catch(e){}
+}
+function saveHintsSeen(){
+  if(!hasStorage()) return;
+  try{ localStorage.setItem(HINTS_KEY, JSON.stringify({seenChipsHint:G.seenChipsHint, seenBasicsHint:G.seenBasicsHint})); }catch(e){}
+}
+function fadeOutHint(el, delay){
+  setTimeout(function(){
+    el.classList.remove('show');
+    setTimeout(function(){ el.style.display='none'; }, 400);
+  }, delay);
+}
+function showHintStaggered(id, appearDelay, visibleDuration){
+  var el=document.getElementById(id);
+  if(!el) return;
+  setTimeout(function(){
+    el.style.display='block';
+    el.classList.add('show');
+    fadeOutHint(el, visibleDuration);
+  }, appearDelay);
+}
+function maybeShowChipsHint(){
+  if(G.seenChipsHint) return;
+  G.seenChipsHint=true;
+  showHintStaggered('hint-chips', 400, 5000);
+  saveHintsSeen();
+}
+function maybeShowBasicsHint(){
+  if(G.seenBasicsHint) return;
+  G.seenBasicsHint=true;
+  showHintStaggered('hint-goal', 0, 4500);
+  showHintStaggered('hint-flip', 700, 5500);
+  saveHintsSeen();
+}
+
 /* ============ RENDERING ============ */
 function formatMoney(n){ return '$'+Math.round(n).toLocaleString('en-US'); }
 function computeChipBreakdown(amount){
-  var denoms=[100,50,25,10,5,1];
+  var denoms=[1000,500,100,50,25,10,5,1];
   var counts=[];
   var remaining=Math.max(0, Math.round(amount));
   var maxChips=6;
@@ -718,6 +808,8 @@ function computeChipBreakdown(amount){
   return counts;
 }
 function chipColorClass(d){
+  if(d>=1000) return 'chip-1000';
+  if(d>=500) return 'chip-500';
   if(d>=100) return 'chip-100';
   if(d>=50) return 'chip-50';
   if(d>=25) return 'chip-25';
@@ -751,6 +843,9 @@ function makeFaceUpCard(card){
 function makeFaceDownCard(card, side, onFlip){
   var wrap=document.createElement('div');
   wrap.className='flip-card';
+  wrap.setAttribute('tabindex','0');
+  wrap.setAttribute('role','button');
+  wrap.setAttribute('aria-label','Face-down card, press Enter to flip');
   var inner=document.createElement('div');
   inner.className='flip-inner';
   var back=document.createElement('div');
@@ -763,15 +858,20 @@ function makeFaceDownCard(card, side, onFlip){
   inner.appendChild(front);
   wrap.appendChild(inner);
   var flipped=false;
-  wrap.addEventListener('click', function(){
+  function doFlip(){
     if(flipped) return;
     flipped=true;
     wrap.classList.add('flipped');
+    wrap.setAttribute('aria-label','Card revealed: '+card.r+card.suit);
     sfxFlip();
     if(side==='banker'){ G.bankerRevealed.push(card); } else { G.playerRevealed.push(card); }
     updateLiveTotal(side);
     renderOddsPanel();
     if(onFlip) onFlip();
+  }
+  wrap.addEventListener('click', doFlip);
+  wrap.addEventListener('keydown', function(e){
+    if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){ e.preventDefault(); doFlip(); }
   });
   requestAnimationFrame(function(){ requestAnimationFrame(function(){ wrap.classList.add('show'); }); });
   return wrap;
@@ -830,7 +930,7 @@ function renderStats(){
   var winRate = betCount ? Math.round(100*(s.wins||0)/betCount)+'%' : '—';
   var avgBet = betCount ? formatMoney((s.betTotal||0)/betCount) : '—';
   var streakText = (s.streak>0) ? s.streak+' '+(s.streakType==='win'?(s.streak>1?'wins':'win'):(s.streak>1?'losses':'loss')) : '—';
-  el.innerHTML =
+  var html =
     item('Hands', s.hands) +
     item('Win rate', winRate) +
     item('W / L / P', (s.wins||0)+' / '+(s.losses||0)+' / '+(s.pushes||0)) +
@@ -838,6 +938,11 @@ function renderStats(){
     item('Avg bet', avgBet) +
     item('Streak', streakText) +
     item('B / P / T', s.banker+' / '+s.player+' / '+s.tie);
+  if(G.quizStats.total>0){
+    var quizPct=Math.round(100*G.quizStats.correct/G.quizStats.total);
+    html += item('Predictions', G.quizStats.correct+'/'+G.quizStats.total+' ('+quizPct+'%)');
+  }
+  el.innerHTML = html;
 }
 
 function addToBigRoad(outcome){
@@ -910,13 +1015,13 @@ function renderRoad(){
   if(G.activeBoard==='bead'){
     if(explainEl) explainEl.textContent='One dot per hand — red Banker, blue Player, hollow green Tie. Fills top to bottom, then starts a new column.';
     if(G.roadHistory.length===0){ el.innerHTML='<span class="road-empty">Results will appear here as you play.</span>'; return; }
-    el.innerHTML=G.roadHistory.map(function(outcome, i){ return '<span class="road-dot '+outcome+'" data-hand-index="'+i+'"></span>'; }).join('');
+    el.innerHTML=G.roadHistory.map(function(outcome, i){ return '<span class="road-dot '+outcome+'" data-hand-index="'+i+'" tabindex="0" role="button" aria-label="View details for hand '+(i+1)+'"></span>'; }).join('');
   } else if(G.activeBoard==='big'){
     if(explainEl) explainEl.textContent='Streaks stack down a column — a new column starts only when the winner changes. Ties mark the cell without breaking the streak.';
     if(G.bigRoad.length===0){ el.innerHTML='<span class="road-empty">Results will appear here as you play.</span>'; return; }
     el.innerHTML=G.bigRoad.map(function(col){
       return '<span class="road-col">'+col.map(function(cell){
-        return '<span class="road-dot big-ring '+cell.outcome+'" data-hand-index="'+cell.handIdx+'">'+(cell.ties?'<span class="tie-badge">'+cell.ties+'</span>':'')+'</span>';
+        return '<span class="road-dot big-ring '+cell.outcome+'" data-hand-index="'+cell.handIdx+'" tabindex="0" role="button" aria-label="View details for hand '+(cell.handIdx+1)+'">'+(cell.ties?'<span class="tie-badge">'+cell.ties+'</span>':'')+'</span>';
       }).join('')+'</span>';
     }).join('');
   } else {
@@ -947,10 +1052,18 @@ function showHandDetail(index){
   });
   var betText = betParts.length ? 'Your bets: '+betParts.join(', ')+' — net '+(r.net>=0?'+':'')+formatMoney(r.net) : 'No bets were placed on this hand.';
   document.getElementById('hd-bets').textContent=betText;
+  hideMannersOverlay();
   document.getElementById('hand-detail-overlay').style.display='flex';
 }
 function hideHandDetail(){
   document.getElementById('hand-detail-overlay').style.display='none';
+}
+function showMannersOverlay(){
+  hideHandDetail();
+  document.getElementById('manners-overlay').style.display='flex';
+}
+function hideMannersOverlay(){
+  document.getElementById('manners-overlay').style.display='none';
 }
 
 function renderOddsPanel(){
@@ -978,10 +1091,53 @@ function renderOddsPanel(){
     '<div style="font-size:10.5px;color:var(--text-muted);opacity:0.8;margin-top:3px;">Estimated from thousands of simulated hands — can\'t be exact, but accurate enough to learn from.</div>';
 }
 
+function bankerRuleText(bankerTotal, p3){
+  switch(bankerTotal){
+    case 0: case 1: case 2: return 'a Banker total of '+bankerTotal+' always draws, no matter what the Player third card is';
+    case 3: return 'a Banker total of 3 draws unless the Player third card is an 8 (it was '+p3+')';
+    case 4: return 'a Banker total of 4 draws only if the Player third card is 2 through 7 (it was '+p3+')';
+    case 5: return 'a Banker total of 5 draws only if the Player third card is 4 through 7 (it was '+p3+')';
+    case 6: return 'a Banker total of 6 draws only if the Player third card is 6 or 7 (it was '+p3+')';
+    case 7: return 'a Banker total of 7 always stands, no matter what the Player third card is';
+  }
+}
+
+function updateThirdCardNote(){
+  var el=document.getElementById('third-card-note');
+  if(!el) return;
+  if(G.quizMode){ el.style.display='none'; return; } // quiz mode's own feedback explains this instead, only after answering
+  if(G.phase!=='third'||!G.result){ el.style.display='none'; return; }
+  var r=G.result;
+  var parts=[];
+  if(r.playerDrewThird){
+    parts.push('<strong>Player drew a third card.</strong> Their first two cards totaled '+r.playerInitialTotal+' — totals of 0 to 5 always draw.');
+  }
+  if(r.playerThirdCardValue===null){
+    // Player stood, so Banker's fate never depended on anything hidden -- always safe to explain in full immediately
+    parts.push('Since Player stood, Banker uses the simple rule: totals of 0 to 5 draw, 6 or 7 stand. Banker had '+r.bankerInitialTotal+', so Banker '+(r.bankerDrewThird?'drew a third card too.':'stands.'));
+  } else if(G.playerRevealed.length>=3){
+    // Player's actual third card has now been flipped by the user -- safe to explain Banker's specific reasoning
+    parts.push('Banker had a two-card total of '+r.bankerInitialTotal+'. The rule: '+bankerRuleText(r.bankerInitialTotal, r.playerThirdCardValue)+' — so Banker '+(r.bankerDrewThird?'draws a third card too.':'stands.'));
+  } else {
+    // Player's third card is still face down -- Banker's reasoning genuinely cannot be explained yet without spoiling it
+    parts.push('Banker had a two-card total of '+r.bankerInitialTotal+'. Whether Banker draws depends on Player\u2019s third card, which is still face down.');
+  }
+  el.innerHTML=parts.join(' ');
+  el.style.display='block';
+}
+
 function explainHand(r){
   if(r.natural){
-    var naturalWho = r.playerInitialTotal>=8 && r.bankerInitialTotal>=8 ? 'Both sides' : (r.playerInitialTotal>=8 ? 'Player' : 'Banker');
-    return '<strong>Natural.</strong> '+naturalWho+' reached an 8 or 9 on the first two cards (Player had '+r.playerInitialTotal+', Banker had '+r.bankerInitialTotal+'). Once either side hits a natural, nobody draws a third card — the hand resolves immediately.';
+    var playerNat = r.playerInitialTotal>=8, bankerNat = r.bankerInitialTotal>=8;
+    var naturalText;
+    if(playerNat && bankerNat){
+      naturalText = 'Both sides reached a natural on the first two cards — Player '+r.playerInitialTotal+', Banker '+r.bankerInitialTotal+'.';
+    } else if(playerNat){
+      naturalText = 'Player\u2019s first two cards total '+r.playerInitialTotal+' — a natural. (Banker had '+r.bankerInitialTotal+'.)';
+    } else {
+      naturalText = 'Banker\u2019s first two cards total '+r.bankerInitialTotal+' — a natural. (Player had '+r.playerInitialTotal+'.)';
+    }
+    return '<strong>Natural.</strong> '+naturalText+' Once either side hits a natural, nobody draws a third card — the hand resolves immediately.';
   }
   var pPart = r.playerDrewThird
     ? 'Player had a two-card total of '+r.playerInitialTotal+'. Totals of 0 to 5 always draw a third card, so Player drew.'
@@ -1004,6 +1160,20 @@ function explainHand(r){
   return '<strong>'+ pPart +'</strong> '+ bPart;
 }
 
+function explainBetOutcomes(r, bets, commissionMode){
+  var net=resolveBets(r, bets, commissionMode);
+  var labels={player:'Player',banker:'Banker',tie:'Tie',dragon7:'Dragon 7',panda8:'Panda 8',dragonP:'Dragon Bonus (Player)',dragonB:'Dragon Bonus (Banker)'};
+  var lines=[];
+  ['player','banker','tie','dragon7','panda8','dragonP','dragonB'].forEach(function(k){
+    if(bets[k]<=0) return;
+    var n=net[k];
+    var desc = n>0 ? 'won '+formatMoney(n) : (n===0 ? 'pushed' : 'lost '+formatMoney(Math.abs(n)));
+    lines.push(formatMoney(bets[k])+' on '+labels[k]+' \u2014 '+desc);
+  });
+  if(lines.length===0) return '';
+  return '<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--line);"><strong>Your bets:</strong> '+lines.join('; ')+'.</div>';
+}
+
 function renderOutcome(){
   var badge=document.getElementById('outcome-badge');
   var why=document.getElementById('why-panel');
@@ -1016,6 +1186,7 @@ function renderOutcome(){
   badge.innerHTML='<span class="'+cls+'">'+label+' ('+r.bankerTotal+' – '+r.playerTotal+')</span>';
 
   var explain=explainHand(r);
+  explain += explainBetOutcomes(r, G.lastBets||G.bets, G.commissionMode);
   why.innerHTML=explain;
   why.style.display='block';
 }
@@ -1026,8 +1197,14 @@ function renderPhaseControls(){
   var total=totalBetAmount();
   document.getElementById('btn-deal').disabled = total<=0 || total>G.bankroll;
   document.getElementById('btn-all-in').disabled = !betting || G.bankroll<=0;
-  document.querySelectorAll('.chip, #btn-clear-bets').forEach(function(b){ b.disabled=!betting; });
+  document.querySelectorAll('.chip, #btn-clear-bets, #btn-bet-half, #btn-bet-double').forEach(function(b){ b.disabled=!betting; });
   document.querySelectorAll('.bet-spot, .side-spot').forEach(function(b){ b.style.pointerEvents = betting?'auto':'none'; b.style.opacity = betting?'1':'0.75'; });
+  document.getElementById('bankroll-empty').style.display = (G.bankroll<=0 && betting) ? 'flex' : 'none';
+}
+function resetBankroll(){
+  G.bankroll=1000;
+  renderAll();
+  saveSharedBankroll();
 }
 
 function renderAll(){
@@ -1071,6 +1248,22 @@ function betAllIn(){
   if(G.phase!=='betting'||G.bankroll<=0) return;
   selectChip(G.bankroll);
 }
+function betHalf(){
+  if(G.phase!=='betting') return;
+  ['player','banker','tie','dragon7','panda8','dragonP','dragonB'].forEach(function(k){
+    if(G.bets[k]>0){ G.bets[k]=Math.floor(G.bets[k]/2); }
+  });
+  sfxChip();
+  renderAll();
+}
+function betDouble(){
+  if(G.phase!=='betting') return;
+  ['player','banker','tie','dragon7','panda8','dragonP','dragonB'].forEach(function(k){
+    if(G.bets[k]>0){ G.bets[k]=G.bets[k]*2; }
+  });
+  sfxChip();
+  renderAll();
+}
 
 /* ============ DEAL / REVEAL FLOW ============ */
 function dealHand(){
@@ -1082,12 +1275,17 @@ function dealHand(){
   document.getElementById('player-cards').innerHTML='';
   document.getElementById('outcome-badge').innerHTML='';
   document.getElementById('why-panel').style.display='none';
+  document.getElementById('third-card-note').style.display='none';
+  document.getElementById('quiz-prompt').style.display='none';
+  G.quizAwaiting=null;
+  G.quizProceedFn=null;
   document.getElementById('banker-total').textContent='';
   document.getElementById('player-total').textContent='';
   G.showFeedback=false;
   G.bankerRevealed=[]; G.playerRevealed=[];
   G.hands=dealInitialHands(G.shoe);
   G.result=null;
+  maybeShowBasicsHint();
 
   if(G.turbo){
     G.result=resolveThirdCards(G.hands, G.shoe);
@@ -1117,6 +1315,57 @@ function dealHand(){
   });
 }
 
+function dealPlayerThirdCard(){
+  dealCardToSide('player-cards', G.result.playerDrawnCard, 0, onThirdCardFlipped);
+}
+function dealBankerThirdCard(){
+  dealCardToSide('banker-cards', G.result.bankerDrawnCard, 0, onThirdCardFlipped);
+}
+
+function askQuizQuestion(who, onProceed){
+  G.quizAwaiting=who;
+  G.quizProceedFn=onProceed;
+  var question = who==='player'
+    ? 'Will Player draw a third card? Player has a two-card total of '+G.result.playerInitialTotal+'.'
+    : 'Will Banker draw a third card? Banker has a two-card total of '+G.result.bankerInitialTotal+'.';
+  document.getElementById('quiz-question').textContent=question;
+  document.getElementById('quiz-feedback').style.display='none';
+  document.getElementById('quiz-buttons').style.display='flex';
+  document.getElementById('quiz-prompt').style.display='block';
+}
+function quizPlayerReason(){
+  var r=G.result;
+  return r.playerDrewThird
+    ? 'Player had '+r.playerInitialTotal+' \u2014 totals of 0 to 5 always draw.'
+    : 'Player had '+r.playerInitialTotal+' \u2014 totals of 6 or 7 always stand.';
+}
+function quizBankerReason(){
+  var r=G.result;
+  if(r.playerThirdCardValue===null){
+    return 'Since Player stood, Banker uses the same simple rule. Banker had '+r.bankerInitialTotal+', and '+(r.bankerDrewThird?'0 to 5 draws.':'6 or 7 stands.');
+  }
+  return 'Banker had '+r.bankerInitialTotal+'. '+bankerRuleText(r.bankerInitialTotal, r.playerThirdCardValue)+'.';
+}
+function answerQuiz(userSaysDraw){
+  var who=G.quizAwaiting;
+  if(!who) return;
+  var willDraw = who==='player' ? G.result.playerDrewThird : G.result.bankerDrewThird;
+  var correct = (userSaysDraw===willDraw);
+  G.quizStats.total++;
+  if(correct) G.quizStats.correct++;
+  document.getElementById('quiz-feedback').textContent = (correct?'Correct! ':'Not quite \u2014 ') + (who==='player' ? quizPlayerReason() : quizBankerReason());
+  document.getElementById('quiz-feedback').style.display='block';
+  document.getElementById('quiz-buttons').style.display='none';
+  G.quizAwaiting=null;
+  renderStats();
+  var proceedFn=G.quizProceedFn;
+  G.quizProceedFn=null;
+  setTimeout(function(){
+    document.getElementById('quiz-prompt').style.display='none';
+    if(proceedFn) proceedFn();
+  }, 2600);
+}
+
 function onInitialCardFlipped(){
   G.initialFlipped++;
   if(G.initialFlipped<4) return;
@@ -1132,22 +1381,35 @@ function onInitialCardFlipped(){
   G.thirdFlipped=0;
   G.phase='third';
   sfxThirdCard();
-  var delay=0;
+  updateThirdCardNote();
+  G.bankerThirdPending=false;
   if(needsPlayerThird){
-    dealCardToSide('player-cards', G.result.playerDrawnCard, delay, onThirdCardFlipped);
-    delay+=260;
-  }
-  if(needsBankerThird){
-    dealCardToSide('banker-cards', G.result.bankerDrawnCard, delay, onThirdCardFlipped);
+    if(G.quizMode){ askQuizQuestion('player', dealPlayerThirdCard); } else { dealPlayerThirdCard(); }
+    if(needsBankerThird){
+      // Banker's decision depended on the value of Player's third card -- in a real casino the
+      // dealer would not even deal Banker's card until Player's is turned face up. Defer it here
+      // the same way; it gets dealt inside onThirdCardFlipped() once Player's card is revealed.
+      G.bankerThirdPending=true;
+    }
+  } else if(needsBankerThird){
+    // Player stood, so Banker's decision never depended on anything hidden -- safe to deal right away
+    if(G.quizMode){ askQuizQuestion('banker', dealBankerThirdCard); } else { dealBankerThirdCard(); }
   }
 }
 
 function onThirdCardFlipped(){
   G.thirdFlipped++;
+  updateThirdCardNote();
+  if(G.bankerThirdPending && G.playerRevealed.length>=3){
+    G.bankerThirdPending=false;
+    if(G.quizMode){ askQuizQuestion('banker', dealBankerThirdCard); } else { dealBankerThirdCard(); }
+    return; // Banker's card still needs to appear (and then be flipped) -- not done yet
+  }
   if(G.thirdFlipped>=G.thirdNeeded){ finishHand(); }
 }
 
 function finishHand(){
+  G.lastBets=Object.assign({},G.bets);
   var net=resolveBets(G.result, G.bets, G.commissionMode);
   var totalNet=net.player+net.banker+net.tie+net.dragon7+net.panda8+net.dragonP+net.dragonB;
   var totalBack=0;
@@ -1179,6 +1441,7 @@ function finishHand(){
     bets:Object.assign({},G.bets), net:totalNet
   });
   G.phase='done';
+  updateThirdCardNote();
   G.showFeedback=true;
   G.bankerRevealed=[]; G.playerRevealed=[]; // reset so the odds panel shows the fresh baseline, not the just-finished hand
   if(totalBetAmount()>0){
@@ -1206,6 +1469,7 @@ function readSettings(){
   G.soundOn=document.getElementById('set-sound').checked;
   G.tooltipsEnabled=document.getElementById('set-tooltips').checked;
   G.showOdds=document.getElementById('set-showodds').checked;
+  G.quizMode=document.getElementById('set-quizmode').checked;
   G.turbo=document.getElementById('set-turbo').checked;
   document.body.classList.toggle('tooltips-off', !G.tooltipsEnabled);
   var newDecks=parseInt(document.getElementById('set-decks').value,10)||8;
@@ -1214,6 +1478,13 @@ function readSettings(){
     G.shoe=buildShoe(G.decks);
   }
 }
+document.getElementById('set-quizmode').addEventListener('change', function(){
+  // Turbo skips the entire card-by-card reveal that quiz mode depends on -- they can't coexist
+  if(this.checked){ document.getElementById('set-turbo').checked=false; }
+});
+document.getElementById('set-turbo').addEventListener('change', function(){
+  if(this.checked){ document.getElementById('set-quizmode').checked=false; }
+});
 
 var THEMES={
   graphite:{label:'Graphite', felt:'#0C0D10','felt-dark':'#08090B',panel:'#15171B','panel-2':'#1D2025','card-face':'#F4F5F7',ink:'#15171B',brass:'#D6A94B','brass-bright':'#F0C46B',coral:'#E15D45',sage:'#3FA484','sage-bright':'#65C7A3','dusty-blue':'#5B8DE0',violet:'#9C82E0',text:'#EDEEF0','text-muted':'#8A8F98',line:'rgba(237,238,240,0.09)'},
@@ -1232,14 +1503,21 @@ function applyTheme(name){
 document.querySelectorAll('.bet-spot, .side-spot').forEach(function(el){
   el.addEventListener('click', function(){ placeBet(el.getAttribute('data-spot')); });
   el.addEventListener('contextmenu', function(e){ e.preventDefault(); removeChipFrom(el.getAttribute('data-spot')); });
+  el.addEventListener('keydown', function(e){
+    if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){ e.preventDefault(); placeBet(el.getAttribute('data-spot')); }
+  });
 });
 document.querySelectorAll('.chip').forEach(function(el){
   el.addEventListener('click', function(){ selectChip(parseInt(el.getAttribute('data-chip'),10)); });
 });
 document.getElementById('btn-clear-bets').addEventListener('click', clearBets);
 document.getElementById('btn-all-in').addEventListener('click', betAllIn);
+document.getElementById('btn-bet-half').addEventListener('click', betHalf);
+document.getElementById('btn-bet-double').addEventListener('click', betDouble);
+document.getElementById('btn-reset-bankroll').addEventListener('click', resetBankroll);
+document.getElementById('btn-reset-bankroll-settings').addEventListener('click', resetBankroll);
 document.getElementById('btn-deal').addEventListener('click', dealHand);
-['set-commission','sb-dragon7','sb-panda8','sb-dragonbonus','set-sound','set-tooltips','set-showodds','set-decks','set-turbo'].forEach(function(id){
+['set-commission','sb-dragon7','sb-panda8','sb-dragonbonus','set-sound','set-tooltips','set-showodds','set-decks','set-turbo','set-quizmode'].forEach(function(id){
   document.getElementById(id).addEventListener('change', function(){ readSettings(); renderAll(); });
 });
 document.getElementById('btn-toggle-settings').addEventListener('click', function(){
@@ -1251,7 +1529,19 @@ document.getElementById('road-grid').addEventListener('click', function(e){
   var dot = e.target.closest ? e.target.closest('[data-hand-index]') : null;
   if(dot){ showHandDetail(parseInt(dot.getAttribute('data-hand-index'),10)); }
 });
+document.getElementById('road-grid').addEventListener('keydown', function(e){
+  if(e.key!=='Enter'&&e.key!==' '&&e.key!=='Spacebar') return;
+  var dot = e.target.closest ? e.target.closest('[data-hand-index]') : null;
+  if(dot){ e.preventDefault(); showHandDetail(parseInt(dot.getAttribute('data-hand-index'),10)); }
+});
 document.getElementById('btn-close-detail').addEventListener('click', hideHandDetail);
+document.getElementById('btn-manners').addEventListener('click', function(e){
+  e.preventDefault();
+  showMannersOverlay();
+});
+document.getElementById('btn-manners-close').addEventListener('click', hideMannersOverlay);
+document.getElementById('quiz-yes').addEventListener('click', function(){ answerQuiz(true); });
+document.getElementById('quiz-no').addEventListener('click', function(){ answerQuiz(false); });
 document.getElementById('hand-detail-overlay').addEventListener('click', function(e){
   if(e.target.id==='hand-detail-overlay'){ hideHandDetail(); }
 });
@@ -1267,9 +1557,11 @@ G.shoe=buildShoe(8);
 applyTheme('emerald');
 var sharedBalance=loadSharedBankroll();
 if(sharedBalance!==null){ G.bankroll=sharedBalance; } else { saveSharedBankroll(); }
+loadHintsSeen();
 readSettings();
 renderBoardTabs();
 renderAll();
+maybeShowChipsHint();
 </script>
 </body>
 </html>
