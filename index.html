@@ -36,6 +36,9 @@ a{color:inherit;}
 /* ---------- header ---------- */
 header.site{display:flex;align-items:center;justify-content:space-between;padding:26px 0 0;}
 .wordmark{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;letter-spacing:-0.3px;display:flex;align-items:center;gap:8px;}
+.header-nav-link{font-family:'Inter',sans-serif;font-size:13.5px;font-weight:500;color:var(--text-muted);text-decoration:none;padding-bottom:2px;border-bottom:1px solid transparent;transition:color 160ms ease,border-color 160ms ease;}
+.header-nav-link:hover{color:var(--brass-bright);border-color:rgba(240,196,107,0.4);}
+@media(max-width:640px){ #rv-nav{display:none !important;} }
 .wordmark .dot{width:9px;height:9px;border-radius:50%;background:var(--brass);box-shadow:0 0 10px 1px rgba(214,169,75,0.6);}
 .bankroll-pill{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 14px 7px 10px;}
 .bankroll-pill .chip{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--brass-bright),var(--brass) 70%);border:2px solid rgba(8,9,11,0.35);flex-shrink:0;}
@@ -118,7 +121,13 @@ footer a:hover{color:var(--brass-bright);}
 
 <div class="wrap">
   <header class="site">
-    <div class="wordmark rv" id="rv-wordmark"><span class="dot"></span>Table Ready</div>
+    <div style="display:flex;align-items:center;gap:30px;">
+      <div class="wordmark rv" id="rv-wordmark"><span class="dot"></span>Table Ready</div>
+      <nav class="rv" id="rv-nav" style="display:flex;gap:22px;">
+        <a href="/learn/" class="header-nav-link">Learn to play</a>
+        <a href="/learn/glossary/" class="header-nav-link">Glossary</a>
+      </nav>
+    </div>
     <div class="bankroll-pill rv" id="rv-bankroll"><span class="chip"></span><span class="label">Bankroll</span><span class="amount" id="bankroll-amount">$1,000</span></div>
   </header>
 
@@ -131,7 +140,6 @@ footer a:hover{color:var(--brass-bright);}
       Sit down at Blackjack
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
-    <a class="rv" href="/learn/" style="display:block;margin-top:16px;font-size:13.5px;color:var(--text-muted);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;">Not sure how either game works? See it in motion &rarr;</a>
   </section>
 
   <section class="floor">
@@ -272,7 +280,12 @@ footer a:hover{color:var(--brass-bright);}
   </section>
 
   <footer>
-    <span style="display:block;">For education only — free practice tables, not real-money gambling.</span>
+    <span style="display:block;">
+      <a href="/learn/" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Learn to play</a>
+      <span style="opacity:0.4;margin:0 6px;">&middot;</span>
+      <a href="/learn/glossary/" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Glossary</a>
+    </span>
+    <span style="display:block;margin-top:10px;">For education only — free practice tables, not real-money gambling.</span>
     <span style="display:block;margin-top:4px;">© 2026 SledgeMakesGames. All rights reserved.</span>
   </footer>
 </div>
@@ -324,7 +337,7 @@ function randomCard(){
 })();
 
 // page-load reveal sequence
-var loadOrder = ['rv-wordmark','rv-bankroll','rv-eyebrow','rv-h1','rv-p','rv-cta'];
+var loadOrder = ['rv-wordmark','rv-nav','rv-bankroll','rv-eyebrow','rv-h1','rv-p','rv-cta'];
 loadOrder.forEach(function(id, i){
   var el = document.getElementById(id);
   if(!el) return;
