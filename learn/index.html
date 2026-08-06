@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn to Play — Table Ready</title>
+<meta name="description" content="See how Blackjack and Baccarat actually play, in short animated walkthroughs — no signup, no wall of rules text.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Table Ready">
+<meta property="og:title" content="Learn to Play — Table Ready">
+<meta property="og:description" content="See how Blackjack and Baccarat actually play, in short animated walkthroughs — no signup, no wall of rules text.">
+<meta property="og:url" content="https://tableready.xyz/learn/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Learn to Play — Table Ready">
+<meta name="twitter:description" content="See how Blackjack and Baccarat actually play, in short animated walkthroughs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+@view-transition { navigation: auto; }
+:root{
+  --felt:#0C0D10; --felt-dark:#08090B; --panel:#15171B; --panel-2:#1D2025;
+  --card-face:#F4F5F7; --ink:#15171B;
+  --brass:#D6A94B; --brass-bright:#F0C46B;
+  --coral:#E15D45; --sage:#3FA484; --sage-bright:#65C7A3; --dusty-blue:#5B8DE0; --violet:#9C82E0;
+  --text:#EDEEF0; --text-muted:#8A8F98; --line:rgba(237,238,240,0.09);
+}
+*{box-sizing:border-box;}
+:focus-visible{outline:2px solid var(--brass-bright);outline-offset:3px;border-radius:4px;}
+body{margin:0;background:var(--felt-dark);color:var(--text);font-family:'Inter',sans-serif;}
+a{color:inherit;}
+::selection{background:rgba(214,169,75,0.3);}
+
+.topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:rgba(8,9,11,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.topbar .brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;text-decoration:none;display:flex;align-items:center;gap:8px;}
+.topbar .back{font-size:13px;color:var(--text-muted);text-decoration:none;}
+.topbar .back:hover{color:var(--text);}
+
+.game-switch{position:sticky;top:57px;z-index:35;display:flex;justify-content:center;gap:8px;padding:14px 20px;background:rgba(8,9,11,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.switch-btn{background:var(--panel);border:1px solid var(--line);color:var(--text-muted);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px;padding:9px 20px;border-radius:999px;cursor:pointer;transition:all 160ms ease;}
+.switch-btn.active{background:var(--brass);color:#1A1408;border-color:var(--brass);}
+.switch-btn:not(.active):hover{border-color:rgba(240,196,107,0.35);color:var(--text);}
+
+.game-panel{display:none;opacity:0;transition:opacity 260ms ease;}
+.game-panel.active{display:block;}
+.game-panel.active.fade-in{opacity:1;}
+
+.intro{max-width:640px;margin:0 auto;padding:64px 24px 40px;text-align:center;}
+.intro h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:clamp(28px,5vw,42px);margin:0 0 12px;letter-spacing:-0.5px;}
+.intro p{font-size:15.5px;color:var(--text-muted);line-height:1.6;margin:0;}
+
+.game-hero{padding:72px 24px 48px;text-align:center;position:relative;max-width:640px;margin:0 auto;}
+.hero-glow{position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:560px;height:360px;background:radial-gradient(ellipse,rgba(214,169,75,0.14) 0%,rgba(214,169,75,0) 68%);pointer-events:none;z-index:0;transition:transform 340ms cubic-bezier(.16,1,.3,1);}
+.game-hero h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:clamp(28px,5vw,42px);margin:0 0 12px;letter-spacing:-0.5px;position:relative;z-index:1;}
+.game-hero p{font-size:15.5px;color:var(--text-muted);line-height:1.6;margin:0;position:relative;z-index:1;}
+
+.progress-rail{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:30;display:flex;flex-direction:column;gap:9px;}
+.progress-dot{width:7px;height:7px;border-radius:50%;background:var(--line);border:1px solid var(--line);transition:background 200ms ease,border-color 200ms ease,transform 200ms ease;}
+.progress-dot.active{background:var(--brass);border-color:var(--brass);transform:scale(1.35);}
+@media(max-width:920px){ .progress-rail{display:none;} }
+
+.scene{max-width:920px;margin:0 auto;padding:60px 24px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;opacity:0;transform:translateY(24px);transition:opacity 700ms ease,transform 700ms ease;}
+.scene.in-view{opacity:1;transform:translateY(0);}
+.scene:nth-child(even) .scene-text{order:2;}
+.scene-visual{background:radial-gradient(ellipse 110% 70% at 50% 0%, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 55%),linear-gradient(180deg,#131519 0%,var(--felt) 100%);border:1px solid var(--line);border-radius:20px;min-height:260px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:24px;box-shadow:0 20px 40px -24px rgba(0,0,0,0.6);}
+.scene-text h2{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:clamp(22px,3vw,28px);margin:0 0 12px;letter-spacing:-0.3px;}
+.scene-text p{font-size:15px;color:var(--text-muted);line-height:1.65;margin:0;}
+.scene-text .callout{display:inline-block;margin-top:14px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--brass-bright);background:rgba(214,169,75,0.1);border:1px solid rgba(214,169,75,0.25);padding:6px 12px;border-radius:8px;}
+
+@media(max-width:720px){
+  .scene{grid-template-columns:1fr;gap:24px;padding:44px 20px;}
+  .scene:nth-child(even) .scene-text{order:0;}
+  .card{width:52px;height:74px;}
+  .card-idx{font-size:13px;}
+  .card-idx .pip{font-size:10px;}
+  .card-pip{font-size:19px;}
+  .scene-visual{min-height:190px;padding:18px;}
+  .topbar{padding:14px 16px;}
+  .game-switch{top:53px;padding:12px 16px;}
+}
+@media (prefers-reduced-motion: reduce){
+  .scene{transition:opacity 300ms ease;transform:none !important;}
+  .in-view .anim-deal,.in-view .anim-flip,.in-view .anim-shake,.in-view .anim-fade,.in-view .anim-ring,.in-view .anim-glow{animation:none !important;}
+}
+
+.card{width:64px;height:90px;border-radius:8px;background:var(--card-face);color:var(--ink);position:relative;font-weight:700;font-family:'Space Grotesk',sans-serif;box-shadow:0 4px 10px -4px rgba(0,0,0,0.5);flex-shrink:0;}
+.card.red{color:var(--coral);}
+.card-idx{position:absolute;top:4px;left:4px;font-size:16px;font-weight:800;line-height:1;letter-spacing:-0.3px;display:flex;flex-direction:column;align-items:center;}
+.card-idx .pip{font-size:12px;line-height:1;margin-top:1px;}
+.card-idx.br{top:auto;left:auto;bottom:4px;right:4px;transform:rotate(180deg);}
+.card-pip{font-size:24px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);}
+
+.hand-row{display:flex;gap:8px;justify-content:center;}
+.hand-label{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;text-align:center;margin-bottom:10px;}
+.hand-total{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;text-align:center;margin-top:10px;color:var(--text);min-height:26px;}
+.hand-total.win{color:var(--sage-bright);}
+.hand-total.bust{color:var(--coral);}
+
+footer{text-align:center;padding:40px 24px 60px;font-size:12px;color:var(--text-muted);}
+
+@keyframes dealIn{from{opacity:0;transform:translateY(-16px) scale(0.92);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes softPulse{0%,100%{box-shadow:0 0 0 0 rgba(214,169,75,0);}50%{box-shadow:0 0 0 8px rgba(214,169,75,0.12);}}
+@keyframes flipReveal{from{transform:rotateY(180deg);}to{transform:rotateY(0deg);}}
+@keyframes shakeX{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px);}40%{transform:translateX(5px);}60%{transform:translateX(-4px);}80%{transform:translateX(3px);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes ringPop{0%{transform:scale(0.85);opacity:0;}60%{transform:scale(1.05);opacity:1;}100%{transform:scale(1);opacity:1;}}
+
+.in-view .anim-deal{animation:dealIn 480ms ease both;}
+.in-view .anim-flip{animation:flipReveal 520ms ease both;transform-style:preserve-3d;}
+.in-view .anim-shake{animation:shakeX 520ms ease 420ms both;}
+.in-view .anim-fade{animation:fadeUp 500ms ease both;}
+.in-view .anim-ring{animation:ringPop 420ms cubic-bezier(0.34,1.56,0.64,1) both;}
+.in-view .anim-glow{animation:softPulse 1800ms ease-in-out 2;}
+.hand-row .anim-deal:nth-child(1),.hand-row .anim-flip:nth-child(1){animation-delay:0ms;}
+.hand-row .anim-deal:nth-child(2),.hand-row .anim-flip:nth-child(2){animation-delay:130ms;}
+.hand-row .anim-deal:nth-child(3),.hand-row .anim-flip:nth-child(3){animation-delay:260ms;}
+.hand-total.anim-fade{animation-delay:380ms;}
+.win-tag.anim-fade{animation-delay:560ms;}
+.win-tag{display:inline-block;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;padding:4px 12px;border-radius:999px;margin-top:8px;}
+.win-tag.good{background:rgba(63,164,132,0.15);color:var(--sage-bright);border:1px solid rgba(63,164,132,0.3);}
+.win-tag.bad{background:rgba(225,93,69,0.15);color:var(--coral);border:1px solid rgba(225,93,69,0.3);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="brand">Table Ready</a>
+  <div style="display:flex;gap:18px;align-items:center;">
+    <a href="/learn/glossary/" class="back">Glossary</a>
+    <a href="/" class="back">&larr; Back to the floor</a>
+  </div>
+</div>
+
+<div class="game-switch">
+  <button class="switch-btn active" id="switch-blackjack">Blackjack</button>
+  <button class="switch-btn" id="switch-baccarat">Baccarat</button>
+</div>
+
+<div class="progress-rail" id="progress-rail"></div>
+
+<div class="game-panel active fade-in" id="panel-blackjack">
+  <section class="game-hero">
+    <div class="hero-glow"></div>
+    <h1>How Blackjack works</h1>
+    <p>Seven quick scenes, no rulebook required. Scroll through &mdash; each one shows exactly what happens at the table.</p>
+  </section>
+  <div id="blackjack-scenes"></div>
+</div>
+
+<div class="game-panel" id="panel-baccarat">
+  <section class="game-hero">
+    <div class="hero-glow"></div>
+    <h1>How Baccarat works</h1>
+    <p>Seven quick scenes covering everything from the deal to the one rule that trips everybody up.</p>
+  </section>
+  <div id="baccarat-scenes"></div>
+</div>
+
+<footer>Table Ready — free practice tables, for education only.</footer>
+
+<script>
+function cardHTML(rank, suit, extraClass){
+  var red = (suit==='♥'||suit==='♦');
+  var isFace = (rank==='J'||rank==='Q'||rank==='K');
+  var pip = isFace ? '' : '<span class="card-pip">'+suit+'</span>';
+  return '<div class="card'+(red?' red':'')+(extraClass?' '+extraClass:'')+'">'+
+    '<span class="card-idx"><span>'+rank+'</span><span class="pip">'+suit+'</span></span>'+
+    '<span class="card-idx br"><span>'+rank+'</span><span class="pip">'+suit+'</span></span>'+
+    pip+
+    '</div>';
+}
+function faceDownCard(extraClass){
+  return '<div class="card'+(extraClass?' '+extraClass:'')+'" style="background:var(--panel-2);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:22px;">?</div>';
+}
+function renderScene(container, num, heading, text, visualHTML, callout){
+  var s = document.createElement('div');
+  s.className = 'scene';
+  s.innerHTML =
+    '<div class="scene-text">'+
+      '<h2>'+heading+'</h2>'+
+      '<p>'+text+'</p>'+
+      (callout ? '<div class="callout">'+callout+'</div>' : '')+
+    '</div>'+
+    '<div class="scene-visual">'+visualHTML+'</div>';
+  container.appendChild(s);
+  observer.observe(s);
+}
+var currentGame = 'blackjack';
+var observer = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      e.target.classList.add('in-view');
+      var parent = e.target.parentElement;
+      if(parent && parent.id === currentGame+'-scenes'){
+        updateActiveDot(Array.prototype.indexOf.call(parent.children, e.target));
+      }
+    }
+  });
+}, {threshold:0.4});
+
+/* ============ BLACKJACK SCENES ============ */
+var bjContainer = document.getElementById('blackjack-scenes');
+
+renderScene(bjContainer, 1, 'The goal', 'Get closer to 21 than the dealer &mdash; without going over 21. That\'s the entire game.',
+  '<div style="display:flex;gap:28px;">'+
+    '<div><div class="hand-label">You</div><div class="hand-row">'+cardHTML('K','♠','anim-deal')+cardHTML('9','♥','anim-deal')+'</div><div class="hand-total win anim-fade">19</div><div style="text-align:center;"><span class="win-tag good anim-fade">You win</span></div></div>'+
+    '<div><div class="hand-label">Dealer</div><div class="hand-row">'+cardHTML('Q','♦','anim-deal')+cardHTML('6','♣','anim-deal')+'</div><div class="hand-total anim-fade">16</div></div>'+
+  '</div>');
+
+renderScene(bjContainer, 2, 'Card values', 'Number cards count as their number. Every face card is worth 10. An Ace is 1 or 11 &mdash; whichever helps your hand more.',
+  '<div style="display:flex;gap:14px;">'+
+    '<div style="text-align:center;">'+cardHTML('7','♠','anim-deal')+'<div class="hand-total anim-fade" style="font-size:15px;">7</div></div>'+
+    '<div style="text-align:center;">'+cardHTML('K','♥','anim-deal')+'<div class="hand-total anim-fade" style="font-size:15px;">10</div></div>'+
+    '<div style="text-align:center;">'+cardHTML('A','♣','anim-deal')+'<div class="hand-total anim-fade" style="font-size:15px;">1 or 11</div></div>'+
+  '</div>');
+
+renderScene(bjContainer, 3, 'The deal', 'You get two cards face up. The dealer gets two as well &mdash; but only one of them is shown.',
+  '<div style="display:flex;gap:28px;">'+
+    '<div><div class="hand-label">You</div><div class="hand-row">'+cardHTML('8','♦','anim-deal')+cardHTML('4','♠','anim-deal')+'</div><div class="hand-total anim-fade">12</div></div>'+
+    '<div><div class="hand-label">Dealer</div><div class="hand-row">'+cardHTML('9','♣','anim-deal')+faceDownCard('anim-deal')+'</div><div class="hand-total anim-fade">9 + ?</div></div>'+
+  '</div>');
+
+renderScene(bjContainer, 4, 'Hit or stand', 'Hit to take another card and get closer to 21. Stand to stop right where you are.',
+  '<div><div class="hand-label">You</div><div class="hand-row">'+cardHTML('6','♠')+cardHTML('7','♥')+cardHTML('7','♦','anim-deal')+'</div><div class="hand-total anim-fade">20</div><div style="text-align:center;"><span class="win-tag good anim-fade anim-glow">Stand</span></div></div>');
+
+renderScene(bjContainer, 5, 'Busting', 'Go over 21 and you lose immediately &mdash; it doesn\'t matter what the dealer ends up with.',
+  '<div class="anim-shake"><div class="hand-label">You</div><div class="hand-row">'+cardHTML('10','♠')+cardHTML('8','♥')+cardHTML('6','♦','anim-deal')+'</div><div class="hand-total bust anim-fade">24</div><div style="text-align:center;"><span class="win-tag bad anim-fade">Bust</span></div></div>');
+
+renderScene(bjContainer, 6, 'Blackjack', 'An Ace plus any 10-value card on your first two cards is a natural blackjack. It pays 3 to 2 &mdash; better than an ordinary win.',
+  '<div style="text-align:center;"><div class="hand-label">You</div><div class="hand-row anim-ring">'+cardHTML('A','♠')+cardHTML('K','♥')+'</div><div class="hand-total win anim-fade">21</div><span class="win-tag good anim-fade">Blackjack &mdash; pays 3:2</span></div>',
+  null);
+
+renderScene(bjContainer, 7, "Dealer's turn", 'Once you stand, the hidden card flips face up. The dealer then has to keep hitting until reaching 17 &mdash; no decisions, just the rule.',
+  '<div><div class="hand-label">Dealer</div><div class="hand-row">'+cardHTML('9','♣')+cardHTML('7','♦','anim-flip')+cardHTML('5','♠','anim-deal')+'</div><div class="hand-total win anim-fade">21 &mdash; dealer stands</div></div>');
+
+var bcContainer = document.getElementById('baccarat-scenes');
+
+renderScene(bcContainer, 1, 'The goal', 'Bet on which hand gets closer to 9 &mdash; Banker, Player, or a Tie between them. You\'re not playing either hand yourself.',
+  '<div style="display:flex;gap:28px;">'+
+    '<div><div class="hand-label">Banker</div><div class="hand-row">'+cardHTML('7','♠','anim-deal')+cardHTML('K','♥','anim-deal')+'</div><div class="hand-total win anim-fade">7</div><div style="text-align:center;"><span class="win-tag good anim-fade">Banker wins</span></div></div>'+
+    '<div><div class="hand-label">Player</div><div class="hand-row">'+cardHTML('4','♦','anim-deal')+cardHTML('A','♣','anim-deal')+'</div><div class="hand-total anim-fade">5</div></div>'+
+  '</div>');
+
+renderScene(bcContainer, 2, 'Card values', 'Aces count as 1. Number cards count as their number. 10s and every face card are all worth 0.',
+  '<div style="display:flex;gap:14px;">'+
+    '<div style="text-align:center;">'+cardHTML('A','♠','anim-deal')+'<div class="hand-total anim-fade" style="font-size:15px;">1</div></div>'+
+    '<div style="text-align:center;">'+cardHTML('7','♥','anim-deal')+'<div class="hand-total anim-fade" style="font-size:15px;">7</div></div>'+
+    '<div style="text-align:center;">'+cardHTML('K','♣','anim-deal')+'<div class="hand-total anim-fade" style="font-size:15px;">0</div></div>'+
+  '</div>');
+
+renderScene(bcContainer, 3, 'The deal', 'Both hands get two cards, dealt face down. You flip each one yourself to see what\'s underneath.',
+  '<div style="display:flex;gap:28px;">'+
+    '<div><div class="hand-label">Banker</div><div class="hand-row">'+faceDownCard('anim-deal')+faceDownCard('anim-deal')+'</div></div>'+
+    '<div><div class="hand-label">Player</div><div class="hand-row">'+faceDownCard('anim-deal')+faceDownCard('anim-deal')+'</div></div>'+
+  '</div>');
+
+renderScene(bcContainer, 4, 'Totals wrap at 9', 'Add the two cards together and only the last digit counts. A 7 and an 8 make 15 &mdash; which reads as 5.',
+  '<div style="text-align:center;"><div class="hand-row">'+cardHTML('7','♠','anim-deal')+cardHTML('8','♥','anim-deal')+'</div><div class="hand-total anim-fade" style="color:var(--text-muted);text-decoration:line-through;font-size:16px;">15</div><div class="hand-total win anim-fade" style="margin-top:-6px;">reads as 5</div></div>');
+
+renderScene(bcContainer, 5, 'Natural', 'An 8 or 9 on the first two cards is a natural. The hand ends immediately &mdash; nobody draws a third card, no matter what.',
+  '<div style="text-align:center;"><div class="hand-label">Player</div><div class="hand-row anim-ring">'+cardHTML('4','♠')+cardHTML('5','♥')+'</div><div class="hand-total win anim-fade">9</div><span class="win-tag good anim-fade">Natural</span></div>');
+
+renderScene(bcContainer, 6, 'The third card', 'Player\'s total decides first &mdash; 0 to 5 always draws. Banker\'s decision can depend on exactly what Player just drew, so Banker\'s card always waits until Player\'s is revealed.',
+  '<div style="display:flex;gap:28px;">'+
+    '<div><div class="hand-label">Player</div><div class="hand-row">'+cardHTML('2','♠')+cardHTML('A','♥')+cardHTML('6','♦','anim-flip')+'</div><div class="hand-total anim-fade">9</div></div>'+
+    '<div><div class="hand-label">Banker</div><div class="hand-row">'+cardHTML('4','♣')+cardHTML('K','♠')+cardHTML('3','♥','anim-deal')+'</div><div class="hand-total anim-fade">7</div></div>'+
+  '</div>');
+
+renderScene(bcContainer, 7, 'Winner', 'Closest to 9 wins. A tie pushes every bet except a Tie bet itself &mdash; which pays out big when it actually happens.',
+  '<div style="display:flex;gap:28px;">'+
+    '<div><div class="hand-label">Banker</div><div class="hand-row">'+cardHTML('4','♦')+cardHTML('4','♣')+'</div><div class="hand-total win anim-fade">8</div><div style="text-align:center;"><span class="win-tag good anim-fade">Wins</span></div></div>'+
+    '<div><div class="hand-label">Player</div><div class="hand-row">'+cardHTML('5','♠')+cardHTML('2','♥')+'</div><div class="hand-total anim-fade">7</div></div>'+
+  '</div>');
+
+function buildProgressRail(game){
+  var rail = document.getElementById('progress-rail');
+  var scenes = document.getElementById(game+'-scenes').children;
+  rail.innerHTML = '';
+  for(var i=0;i<scenes.length;i++){
+    var dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    rail.appendChild(dot);
+  }
+}
+function updateActiveDot(index){
+  var rail = document.getElementById('progress-rail');
+  Array.prototype.forEach.call(rail.children, function(d, i){
+    d.classList.toggle('active', i===index);
+  });
+}
+
+function switchGame(game){
+  if(game===currentGame) return;
+  var oldPanel = document.getElementById('panel-'+currentGame);
+  var newPanel = document.getElementById('panel-'+game);
+  document.querySelectorAll('.switch-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('switch-'+game).classList.add('active');
+  oldPanel.classList.remove('fade-in');
+  setTimeout(function(){
+    oldPanel.classList.remove('active');
+    newPanel.classList.add('active');
+    currentGame = game;
+    buildProgressRail(game);
+    requestAnimationFrame(function(){ newPanel.classList.add('fade-in'); });
+  }, 260);
+}
+document.getElementById('switch-blackjack').addEventListener('click', function(){ switchGame('blackjack'); });
+document.getElementById('switch-baccarat').addEventListener('click', function(){ switchGame('baccarat'); });
+
+var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.querySelectorAll('.game-hero').forEach(function(heroSection){
+  var glow = heroSection.querySelector('.hero-glow');
+  if(!glow || reducedMotion) return;
+  heroSection.addEventListener('mousemove', function(e){
+    var rect = heroSection.getBoundingClientRect();
+    var relX = (e.clientX - rect.left) / rect.width - 0.5;
+    glow.style.transform = 'translateX(calc(-50% + ' + (relX*26) + 'px))';
+  });
+  heroSection.addEventListener('mouseleave', function(){ glow.style.transform = 'translateX(-50%)'; });
+});
+
+buildProgressRail('blackjack');
+</script>
+</body>
+</html>
