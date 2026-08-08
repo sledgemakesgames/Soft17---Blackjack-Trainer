@@ -219,6 +219,7 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
     <div class="bankroll-pill"><span class="label">Bankroll</span><span class="pill-chip-stack" id="bankroll-chip-stack"></span><span class="amount" id="bankroll-amount">$1,000</span></div>
     <button id="btn-toggle-settings">Table settings</button>
     <a href="#" id="btn-manners" style="font-size:11.5px;color:var(--text-muted);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Table manners</a>
+    <a href="/learn/glossary/" style="font-size:11.5px;color:var(--text-muted);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Glossary</a>
   </div>
 </header>
 
@@ -873,6 +874,7 @@ function makeFaceDownCard(card, side, onFlip){
   wrap.addEventListener('keydown', function(e){
     if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){ e.preventDefault(); doFlip(); }
   });
+  wrap.triggerFlip = doFlip;
   requestAnimationFrame(function(){ requestAnimationFrame(function(){ wrap.classList.add('show'); }); });
   return wrap;
 }
@@ -883,6 +885,9 @@ function dealCardToSide(sideId, card, delay, onFlip){
     var el=makeFaceDownCard(card, side, onFlip);
     document.getElementById(sideId).appendChild(el);
     sfxDeal();
+    if(G.turbo){
+      setTimeout(function(){ el.triggerFlip(); }, 140);
+    }
   }, delay);
 }
 
@@ -1287,19 +1292,6 @@ function dealHand(){
   G.result=null;
   maybeShowBasicsHint();
 
-  if(G.turbo){
-    G.result=resolveThirdCards(G.hands, G.shoe);
-    G.playerRevealed=G.result.player.slice();
-    G.bankerRevealed=G.result.banker.slice();
-    G.result.player.forEach(function(c){ document.getElementById('player-cards').appendChild(makeFaceUpCard(c)); });
-    G.result.banker.forEach(function(c){ document.getElementById('banker-cards').appendChild(makeFaceUpCard(c)); });
-    document.getElementById('player-total').textContent=String(G.result.playerTotal);
-    document.getElementById('banker-total').textContent=String(G.result.bankerTotal);
-    G.phase='initial';
-    finishHand();
-    return;
-  }
-
   G.initialFlipped=0;
   G.phase='initial';
   renderAll();
@@ -1310,8 +1302,9 @@ function dealHand(){
     {side:'player-cards', card:G.hands.player[1]},
     {side:'banker-cards', card:G.hands.banker[1]}
   ];
+  var dealStagger = G.turbo ? 90 : 260;
   order.forEach(function(step, i){
-    dealCardToSide(step.side, step.card, i*260, onInitialCardFlipped);
+    dealCardToSide(step.side, step.card, i*dealStagger, onInitialCardFlipped);
   });
 }
 
@@ -1384,13 +1377,11 @@ function onInitialCardFlipped(){
   updateThirdCardNote();
   G.bankerThirdPending=false;
   if(needsPlayerThird){
+    // Set this BEFORE dealing player's card: in turbo mode, dealing can auto-flip and cascade
+    // synchronously all the way through to onThirdCardFlipped before this function even returns,
+    // so bankerThirdPending must already be correct by the time that check runs.
+    if(needsBankerThird){ G.bankerThirdPending=true; }
     if(G.quizMode){ askQuizQuestion('player', dealPlayerThirdCard); } else { dealPlayerThirdCard(); }
-    if(needsBankerThird){
-      // Banker's decision depended on the value of Player's third card -- in a real casino the
-      // dealer would not even deal Banker's card until Player's is turned face up. Defer it here
-      // the same way; it gets dealt inside onThirdCardFlipped() once Player's card is revealed.
-      G.bankerThirdPending=true;
-    }
   } else if(needsBankerThird){
     // Player stood, so Banker's decision never depended on anything hidden -- safe to deal right away
     if(G.quizMode){ askQuizQuestion('banker', dealBankerThirdCard); } else { dealBankerThirdCard(); }
