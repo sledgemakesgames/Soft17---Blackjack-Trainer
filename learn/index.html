@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Learn to Play — Table Ready</title>
-<meta name="description" content="See how Blackjack and Baccarat actually play, in short animated walkthroughs — no signup, no wall of rules text.">
+<meta name="description" content="See how Blackjack, Baccarat, and Ultimate Texas Hold'em actually play, in short animated walkthroughs — no signup, no wall of rules text.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" href="/favicon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Table Ready">
 <meta property="og:title" content="Learn to Play — Table Ready">
-<meta property="og:description" content="See how Blackjack and Baccarat actually play, in short animated walkthroughs — no signup, no wall of rules text.">
+<meta property="og:description" content="See how Blackjack, Baccarat, and Ultimate Texas Hold'em actually play, in short animated walkthroughs — no signup, no wall of rules text.">
 <meta property="og:url" content="https://tableready.xyz/learn/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Learn to Play — Table Ready">
-<meta name="twitter:description" content="See how Blackjack and Baccarat actually play, in short animated walkthroughs.">
+<meta name="twitter:description" content="See how Blackjack, Baccarat, and Ultimate Texas Hold'em actually play, in short animated walkthroughs.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -135,6 +135,7 @@ footer{text-align:center;padding:40px 24px 60px;font-size:12px;color:var(--text-
 <div class="game-switch">
   <button class="switch-btn active" id="switch-blackjack">Blackjack</button>
   <button class="switch-btn" id="switch-baccarat">Baccarat</button>
+  <button class="switch-btn" id="switch-uth">Ultimate Texas Hold'em</button>
 </div>
 
 <div class="progress-rail" id="progress-rail"></div>
@@ -157,6 +158,15 @@ footer{text-align:center;padding:40px 24px 60px;font-size:12px;color:var(--text-
   <div id="baccarat-scenes"></div>
 </div>
 
+<div class="game-panel" id="panel-uth">
+  <section class="game-hero">
+    <div class="hero-glow"></div>
+    <h1>How Ultimate Texas Hold'em works</h1>
+    <p>Real hold'em rules, but you're only ever playing against the dealer. Ten quick scenes, from the deal to the payout.</p>
+  </section>
+  <div id="uth-scenes"></div>
+</div>
+
 <footer>Table Ready — free practice tables, for education only.</footer>
 
 <script>
@@ -172,6 +182,24 @@ function cardHTML(rank, suit, extraClass){
 }
 function faceDownCard(extraClass){
   return '<div class="card'+(extraClass?' '+extraClass:'')+'" style="background:var(--panel-2);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:22px;">?</div>';
+}
+function betChip(label, amount, extraClass){
+  return '<div class="'+(extraClass||'')+'" style="text-align:center;">'+
+    '<div style="width:60px;height:60px;border-radius:50%;border:2px dashed rgba(240,196,107,0.45);display:flex;flex-direction:column;align-items:center;justify-content:center;">'+
+      '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:9.5px;font-weight:700;color:var(--brass-bright);text-transform:uppercase;letter-spacing:0.4px;">'+label+'</div>'+
+      (amount ? '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:13px;font-weight:800;margin-top:2px;">'+amount+'</div>' : '')+
+    '</div>'+
+  '</div>';
+}
+function decisionBtn(label, primary, extraClass){
+  return '<span class="'+(extraClass||'')+'" style="display:inline-block;font-family:\'Space Grotesk\',sans-serif;font-weight:700;font-size:12.5px;padding:8px 15px;border-radius:9px;margin:4px;'+
+    (primary ? 'background:var(--brass);color:#20160A;' : 'background:var(--panel-2);border:1px solid var(--line);color:var(--text);')+
+    '">'+label+'</span>';
+}
+function qualifyTag(qualifies){
+  return '<span class="win-tag anim-fade" style="'+
+    (qualifies ? 'background:rgba(63,164,132,0.15);color:var(--sage-bright);border:1px solid rgba(63,164,132,0.3);' : 'background:rgba(91,141,224,0.15);color:var(--dusty-blue);border:1px solid rgba(91,141,224,0.3);')+
+    '">'+(qualifies ? 'Dealer qualifies' : 'Dealer doesn\u2019t qualify')+'</span>';
 }
 function renderScene(container, num, heading, text, visualHTML, callout){
   var s = document.createElement('div');
@@ -273,6 +301,47 @@ renderScene(bcContainer, 7, 'Winner', 'Closest to 9 wins. A tie pushes every bet
     '<div><div class="hand-label">Player</div><div class="hand-row">'+cardHTML('5','♠')+cardHTML('2','♥')+'</div><div class="hand-total anim-fade">7</div></div>'+
   '</div>');
 
+var uthContainer = document.getElementById('uth-scenes');
+
+renderScene(uthContainer, 1, 'The goal', 'You and the dealer each get two cards. Five community cards are shared between you both. Build the best five-card hand you can &mdash; any mix of your own cards and the board &mdash; and beat the dealer.',
+  '<div style="display:flex;gap:28px;">'+
+    '<div><div class="hand-label">You</div><div class="hand-row anim-ring">'+cardHTML('K','♠')+cardHTML('K','♥')+'</div><div class="hand-total win anim-fade">Pair of Kings</div><div style="text-align:center;"><span class="win-tag good anim-fade">You win</span></div></div>'+
+    '<div><div class="hand-label">Dealer</div><div class="hand-row">'+cardHTML('Q','♦')+cardHTML('7','♣')+'</div><div class="hand-total anim-fade">Queen high</div></div>'+
+  '</div>');
+
+renderScene(uthContainer, 2, 'Four bets, one hand', 'Ante and Blind are mandatory, and they always move together &mdash; bet one and the other matches automatically. Trips is a completely optional side bet. Play is the extra bet you add as the hand unfolds.',
+  '<div style="display:flex;gap:16px;">'+betChip('Ante','$25','anim-deal')+betChip('Blind','$25','anim-deal')+betChip('Play','?','anim-deal')+betChip('Trips','$25','anim-deal')+'</div>');
+
+renderScene(uthContainer, 3, 'The deal', 'Your two cards come face up &mdash; you see exactly what you\'re holding. The dealer\'s two stay face down until the very end, no matter how the hand plays out.',
+  '<div style="display:flex;gap:28px;">'+
+    '<div><div class="hand-label">You</div><div class="hand-row">'+cardHTML('A','♠','anim-deal')+cardHTML('K','♥','anim-deal')+'</div></div>'+
+    '<div><div class="hand-label">Dealer</div><div class="hand-row">'+faceDownCard('anim-deal')+faceDownCard('anim-deal')+'</div></div>'+
+  '</div>');
+
+renderScene(uthContainer, 4, 'Decision one: before the flop', 'With just your two hole cards and nothing else revealed, you can bet 4x your Ante right away &mdash; or check and see more of the board for free. Only the strongest starting hands are worth betting this early.',
+  '<div style="text-align:center;"><div class="hand-label">You</div><div class="hand-row">'+cardHTML('A','♠')+cardHTML('K','♥')+'</div><div style="margin-top:12px;">'+decisionBtn('Check')+decisionBtn('Bet 4x', true, 'anim-fade')+'</div></div>');
+
+renderScene(uthContainer, 5, 'The flop', 'If you checked, three community cards appear. Now you can bet 2x your Ante &mdash; or check again and wait for the rest of the board.',
+  '<div style="text-align:center;"><div class="hand-label">Board</div><div class="hand-row">'+cardHTML('9','♠','anim-deal')+cardHTML('5','♥','anim-deal')+cardHTML('2','♦','anim-deal')+'</div><div style="margin-top:12px;">'+decisionBtn('Check')+decisionBtn('Bet 2x', true, 'anim-fade')+'</div></div>');
+
+renderScene(uthContainer, 6, 'The river \u2014 your last chance', 'The final two community cards land, so all five are showing. This is the last decision point: bet exactly 1x your Ante, or fold and give up your Ante and Blind for nothing.',
+  '<div style="text-align:center;"><div class="hand-label">Board</div><div class="hand-row">'+cardHTML('9','♠')+cardHTML('5','♥')+cardHTML('2','♦')+cardHTML('J','♣','anim-deal')+cardHTML('4','♠','anim-deal')+'</div><div style="margin-top:12px;">'+decisionBtn('Fold')+decisionBtn('Bet 1x', true, 'anim-fade')+'</div></div>');
+
+renderScene(uthContainer, 7, 'The dealer has to qualify', 'Once you\'ve bet, the dealer\'s cards flip. They need at least a pair to "qualify." If they don\'t, your Ante is protected \u2014 it pushes no matter what, even if the dealer\'s hand would have otherwise beaten you.',
+  '<div style="text-align:center;"><div class="hand-label">Dealer</div><div class="hand-row">'+cardHTML('K','♦','anim-flip')+cardHTML('4','♣','anim-flip')+'</div><div class="hand-total anim-fade">King high</div>'+qualifyTag(false)+'<div style="font-size:11.5px;color:var(--text-muted);margin-top:8px;" class="anim-fade">Your Ante pushes</div></div>');
+
+renderScene(uthContainer, 8, 'Showdown', 'Both hands compare using the best five cards each of you can make from your own two cards plus the shared board. The higher hand wins the Ante, Blind, and Play bets together.',
+  '<div style="display:flex;gap:28px;">'+
+    '<div><div class="hand-label">You</div><div class="hand-row">'+cardHTML('A','♠')+cardHTML('K','♥')+'</div><div class="hand-total win anim-fade">Pair of Aces</div><div style="text-align:center;"><span class="win-tag good anim-fade">You win</span></div></div>'+
+    '<div><div class="hand-label">Dealer</div><div class="hand-row">'+cardHTML('Q','♦','anim-flip')+cardHTML('7','♣','anim-flip')+'</div><div class="hand-total anim-fade">Queen high</div></div>'+
+  '</div>');
+
+renderScene(uthContainer, 9, 'The Blind bet', 'Blind only pays extra if your final hand is a straight or better \u2014 and only if you win. Anything less than a straight, and Blind simply pushes, win or lose.',
+  '<div style="text-align:center;"><div class="hand-label">You</div><div class="hand-row anim-ring">'+cardHTML('5','♠')+cardHTML('6','♥')+cardHTML('7','♦')+cardHTML('8','♣')+cardHTML('9','♠')+'</div><div class="hand-total win anim-fade">Straight</div><span class="win-tag good anim-fade">Blind pays 1:1</span></div>');
+
+renderScene(uthContainer, 10, 'The Trips bet', 'Trips is judged entirely on its own \u2014 it only cares about your final hand, three of a kind or better, whether or not you beat the dealer at all. Miss it, and Trips loses on its own too.',
+  '<div style="text-align:center;"><div class="hand-label">You</div><div class="hand-row anim-ring">'+cardHTML('8','♠')+cardHTML('8','♥')+cardHTML('8','♦')+cardHTML('K','♣')+cardHTML('3','♦')+'</div><div class="hand-total win anim-fade">Three of a Kind</div><span class="win-tag good anim-fade">Trips pays 3:1</span></div>');
+
 function buildProgressRail(game){
   var rail = document.getElementById('progress-rail');
   var scenes = document.getElementById(game+'-scenes').children;
@@ -307,6 +376,7 @@ function switchGame(game){
 }
 document.getElementById('switch-blackjack').addEventListener('click', function(){ switchGame('blackjack'); });
 document.getElementById('switch-baccarat').addEventListener('click', function(){ switchGame('baccarat'); });
+document.getElementById('switch-uth').addEventListener('click', function(){ switchGame('uth'); });
 
 var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.querySelectorAll('.game-hero').forEach(function(heroSection){
