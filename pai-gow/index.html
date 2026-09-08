@@ -1,20 +1,24 @@
+<!--
+  Table Ready — Pai Gow Poker.
+  © 2026 SledgeMakesGames. All rights reserved to the extent permitted by applicable law.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Learn to Play — Table Ready</title>
-<meta name="description" content="See how Blackjack, Baccarat, Pai Gow Poker, and Ultimate Texas Hold'em actually play, in short animated walkthroughs — no signup, no wall of rules text.">
+<title>Table Ready — Pai Gow Poker</title>
+<meta name="description" content="Play real Pai Gow Poker hands — split seven cards into a high hand and a low hand, beat both of the dealer's hands, and finally understand why the joker isn't just an ace. Free, no real money, ever.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" href="/favicon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Table Ready">
-<meta property="og:title" content="Learn to Play — Table Ready">
-<meta property="og:description" content="See how Blackjack, Baccarat, Pai Gow Poker, and Ultimate Texas Hold'em actually play, in short animated walkthroughs — no signup, no wall of rules text.">
-<meta property="og:url" content="https://tableready.xyz/learn/">
+<meta property="og:title" content="Table Ready — Pai Gow Poker">
+<meta property="og:description" content="Play real Pai Gow Poker hands — split seven cards into a high hand and a low hand, beat both of the dealer's hands. Free, no real money, ever.">
+<meta property="og:url" content="https://tableready.xyz/pai-gow/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Learn to Play — Table Ready">
-<meta name="twitter:description" content="See how Blackjack, Baccarat, Pai Gow Poker, and Ultimate Texas Hold'em actually play, in short animated walkthroughs.">
+<meta name="twitter:title" content="Table Ready — Pai Gow Poker">
+<meta name="twitter:description" content="Play real Pai Gow Poker hands — split seven cards into a high hand and a low hand, beat both of the dealer's hands. Free, no real money, ever.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -27,444 +31,1442 @@
   --text:#EDEEF0; --text-muted:#8A8F98; --line:rgba(237,238,240,0.09);
 }
 *{box-sizing:border-box;}
-:focus-visible{outline:2px solid var(--brass-bright);outline-offset:3px;border-radius:4px;}
-body{margin:0;background:var(--felt-dark);color:var(--text);font-family:'Inter',sans-serif;}
+body{margin:0;background:var(--felt-dark);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;padding:28px 16px 64px;}
 a{color:inherit;}
-::selection{background:rgba(214,169,75,0.3);}
-
-.topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:rgba(8,9,11,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
-.topbar .brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;text-decoration:none;display:flex;align-items:center;gap:8px;}
-.topbar .back{font-size:13px;color:var(--text-muted);text-decoration:none;}
-.topbar .back:hover{color:var(--text);}
-
-.game-switch{position:sticky;top:57px;z-index:35;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:14px 20px;background:rgba(8,9,11,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
-.switch-btn{background:var(--panel);border:1px solid var(--line);color:var(--text-muted);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px;padding:9px 20px;border-radius:999px;cursor:pointer;transition:all 160ms ease;}
-.switch-btn.active{background:var(--brass);color:#1A1408;border-color:var(--brass);}
-.switch-btn:not(.active):hover{border-color:rgba(240,196,107,0.35);color:var(--text);}
-
-.game-panel{display:none;opacity:0;transition:opacity 260ms ease;}
-.game-panel.active{display:block;}
-.game-panel.active.fade-in{opacity:1;}
-
-.intro{max-width:640px;margin:0 auto;padding:64px 24px 40px;text-align:center;}
-.intro h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:clamp(28px,5vw,42px);margin:0 0 12px;letter-spacing:-0.5px;}
-.intro p{font-size:15.5px;color:var(--text-muted);line-height:1.6;margin:0;}
-
-.game-hero{padding:72px 24px 48px;text-align:center;position:relative;max-width:640px;margin:0 auto;}
-.hero-glow{position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:560px;height:360px;background:radial-gradient(ellipse,rgba(214,169,75,0.14) 0%,rgba(214,169,75,0) 68%);pointer-events:none;z-index:0;transition:transform 340ms cubic-bezier(.16,1,.3,1);}
-.game-hero h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:clamp(28px,5vw,42px);margin:0 0 12px;letter-spacing:-0.5px;position:relative;z-index:1;}
-.game-hero p{font-size:15.5px;color:var(--text-muted);line-height:1.6;margin:0;position:relative;z-index:1;}
-
-.progress-rail{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:30;display:flex;flex-direction:column;gap:9px;}
-.progress-dot{width:7px;height:7px;border-radius:50%;background:var(--line);border:1px solid var(--line);transition:background 200ms ease,border-color 200ms ease,transform 200ms ease;}
-.progress-dot.active{background:var(--brass);border-color:var(--brass);transform:scale(1.35);}
-@media(max-width:920px){ .progress-rail{display:none;} }
-
-.scene{max-width:920px;margin:0 auto;padding:60px 24px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;opacity:0;transform:translateY(24px);transition:opacity 700ms ease,transform 700ms ease;}
-.scene.in-view{opacity:1;transform:translateY(0);}
-.scene:nth-child(even) .scene-text{order:2;}
-.scene-visual{background:radial-gradient(ellipse 110% 70% at 50% 0%, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 55%),linear-gradient(180deg,#131519 0%,var(--felt) 100%);border:1px solid var(--line);border-radius:20px;min-height:260px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:24px;box-shadow:0 20px 40px -24px rgba(0,0,0,0.6);}
-.scene-text h2{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:clamp(22px,3vw,28px);margin:0 0 12px;letter-spacing:-0.3px;}
-.scene-text p{font-size:15px;color:var(--text-muted);line-height:1.65;margin:0;}
-.scene-text .callout{display:inline-block;margin-top:14px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--brass-bright);background:rgba(214,169,75,0.1);border:1px solid rgba(214,169,75,0.25);padding:6px 12px;border-radius:8px;}
-
-@media(max-width:720px){
-  .scene{grid-template-columns:1fr;gap:24px;padding:44px 20px;}
-  .scene:nth-child(even) .scene-text{order:0;}
-  .card{width:52px;height:74px;}
-  .card-idx{font-size:13px;}
-  .card-idx .pip{font-size:10px;}
-  .card-pip{font-size:19px;}
-  .scene-visual{min-height:190px;padding:18px;}
-  .topbar{padding:14px 16px;}
-  .game-switch{top:53px;padding:12px 16px;}
+:focus-visible{outline:2px solid var(--brass-bright);outline-offset:2px;border-radius:4px;}
+.wrap{max-width:900px;margin:0 auto;transition:max-width 200ms ease;}
+.layout-grid{display:block;}
+.side-panels{display:block;}
+.side-panels .panel{margin-bottom:16px;}
+.side-panels .panel:last-child{margin-bottom:0;}
+@media(min-width:1320px){
+  .wrap{max-width:1300px;}
+  .layout-grid{display:grid;grid-template-columns:900px 1fr;gap:20px;align-items:start;}
+  .side-panels{display:block;position:sticky;top:20px;}
 }
-@media (prefers-reduced-motion: reduce){
-  .scene{transition:opacity 300ms ease;transform:none !important;}
-  .in-view .anim-deal,.in-view .anim-flip,.in-view .anim-shake,.in-view .anim-fade,.in-view .anim-ring,.in-view .anim-glow{animation:none !important;}
-}
+button{font-family:'Inter',sans-serif;background:var(--panel-2);color:var(--text);border:1px solid var(--line);border-radius:9px;padding:9px 14px;font-size:13px;cursor:pointer;transition:border-color 140ms ease,background 140ms ease;}
+button:hover{border-color:rgba(237,238,240,0.22);}
+button.primary{background:var(--brass);color:#20160A;border:none;font-weight:600;}
+button.primary:hover{background:var(--brass-bright);}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+select{background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:7px;padding:6px 8px;font-size:12.5px;font-family:'Inter',sans-serif;}
 
-.card{width:64px;height:90px;border-radius:8px;background:var(--card-face);color:var(--ink);position:relative;font-weight:700;font-family:'Space Grotesk',sans-serif;box-shadow:0 4px 10px -4px rgba(0,0,0,0.5);flex-shrink:0;}
+.back-link{display:inline-flex;align-items:center;gap:7px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:-0.1px;text-decoration:none;color:var(--text-muted);margin-bottom:14px;transition:color 140ms ease;}
+.back-link:hover{color:var(--brass-bright);}
+.back-link .back-dot{width:7px;height:7px;border-radius:50%;background:var(--brass);flex-shrink:0;}
+
+header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:14px;}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;letter-spacing:-0.6px;margin:0 0 4px;}
+.tagline{font-size:13px;color:var(--text-muted);margin:0;max-width:440px;}
+.bankroll-pill{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 14px 8px 12px;flex-shrink:0;}
+.bankroll-pill .label{font-size:10.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-right:2px;}
+.bankroll-pill .amount{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px;}
+.panel h2.section{font-family:'Space Grotesk',sans-serif;font-size:16px;margin:0 0 12px;}
+.check-row{display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:8px;}
+.foot-note{font-size:12px;color:var(--text-muted);line-height:1.6;margin-top:6px;}
+
+.table-felt{position:relative;margin-bottom:16px;background:radial-gradient(ellipse 110% 60% at 50% 0%, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 55%),radial-gradient(ellipse 130% 90% at 50% 100%, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 62%),linear-gradient(180deg, #131519 0%, var(--felt) 100%);border:1px solid var(--line);border-radius:20px;padding:22px 18px;box-shadow:0 1px 0 rgba(255,255,255,0.03) inset,0 20px 40px -24px rgba(0,0,0,0.6);}
+
+.seat-label{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;text-align:center;margin:0 0 8px;}
+.hint-line{text-align:center;font-size:12px;color:var(--brass-bright);background:rgba(214,169,75,0.08);border:1px solid rgba(214,169,75,0.22);border-radius:10px;padding:8px 12px;margin:0 0 12px;}
+
+/* ---- Cards ---- */
+.card,.flip-card,.card-slot{width:100px;height:140px;flex-shrink:0;}
+.card{border-radius:8px;background:var(--card-face);color:var(--ink);position:relative;font-weight:700;font-family:'Space Grotesk',sans-serif;box-shadow:0 4px 10px -4px rgba(0,0,0,0.5);opacity:0;transform:translateY(-8px) scale(0.94);transition:opacity 220ms ease,transform 220ms ease;}
+.card.show{opacity:1;transform:translateY(0) scale(1);}
 .card.red{color:var(--coral);}
 .card.joker{color:var(--violet);}
-.card.value-highlight{box-shadow:0 0 0 3px var(--sage-bright),0 4px 16px -2px rgba(101,199,163,0.55);}
-.card-idx{position:absolute;top:4px;left:4px;font-size:16px;font-weight:800;line-height:1;letter-spacing:-0.3px;display:flex;flex-direction:column;align-items:center;}
-.card-idx .pip{font-size:12px;line-height:1;margin-top:1px;}
-.card-idx.br{top:auto;left:auto;bottom:4px;right:4px;transform:rotate(180deg);}
-.card-pip{font-size:24px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);}
+.flip-front.red{color:var(--coral);}
+.flip-front.joker{color:var(--violet);}
+.card-idx{position:absolute;top:8px;left:9px;font-size:18px;line-height:1.05;display:flex;flex-direction:column;align-items:center;}
+.card-idx .pip{font-size:15px;margin-top:2px;}
+.card-idx.br{top:auto;left:auto;bottom:8px;right:9px;transform:rotate(180deg);}
+.card-pip{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:42px;}
+.card-joker-icon{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(1.5);}
+.card-joker-label{position:absolute;left:50%;top:10px;transform:translateX(-50%);font-size:11px;font-weight:800;letter-spacing:1.4px;}
+.card-joker-label.br{top:auto;bottom:10px;transform:translateX(-50%) rotate(180deg);}
 
-.hand-row{display:flex;gap:8px;justify-content:center;}
-.hand-label{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;text-align:center;margin-bottom:10px;}
-.hand-total{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;text-align:center;margin-top:10px;color:var(--text);min-height:26px;}
+.flip-card{perspective:600px;cursor:default;opacity:0;transform:translateY(-8px) scale(0.94);transition:opacity 220ms ease,transform 220ms ease;}
+.flip-card.show{opacity:1;transform:translateY(0) scale(1);}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform 420ms cubic-bezier(.4,0,.2,1);transform-style:preserve-3d;}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+.flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:8px;}
+.flip-front{background:var(--card-face);color:var(--ink);box-shadow:0 4px 10px -4px rgba(0,0,0,0.5);transform:rotateY(180deg);font-weight:700;font-family:'Space Grotesk',sans-serif;}
+.flip-back{background:var(--panel-2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:22px;}
+.card-back-static{background:var(--panel-2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:20px;}
+
+.card-value-highlight{box-shadow:0 0 0 3px var(--sage-bright),0 4px 16px -2px rgba(101,199,163,0.55);transform:translateY(-3px);transition:box-shadow 320ms ease,transform 320ms ease;}
+.flip-card.card-value-highlight .flip-front{box-shadow:0 0 0 3px var(--sage-bright),0 4px 16px -2px rgba(101,199,163,0.55);transition:box-shadow 320ms ease;}
+.card-not-best{opacity:0.4;}
+
+/* ---- Hand rows ---- */
+.hand-row{display:flex;gap:10px;justify-content:center;flex-wrap:nowrap;overflow-x:auto;min-height:140px;align-items:center;padding:4px 2px 10px;scrollbar-width:none;-ms-overflow-style:none;}
+.hand-row::-webkit-scrollbar{display:none;height:0;}
+.hand-total{text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:var(--text-muted);margin-top:8px;min-height:18px;}
 .hand-total.win{color:var(--sage-bright);}
-.hand-total.bust{color:var(--coral);}
+.hand-total.foul{color:var(--coral);}
 
-footer{text-align:center;padding:40px 24px 60px;font-size:12px;color:var(--text-muted);}
+.split-zone{display:flex;flex-direction:column;gap:6px;align-items:center;margin:4px 0;}
+.split-zone-label{font-size:10.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.6px;font-weight:700;}
+.low-hand-slots{display:flex;gap:8px;justify-content:center;min-height:90px;align-items:center;}
+.low-slot-empty{width:64px;height:90px;border-radius:8px;border:2px dashed rgba(237,238,240,0.16);flex-shrink:0;}
 
-@keyframes dealIn{from{opacity:0;transform:translateY(-16px) scale(0.92);}to{opacity:1;transform:translateY(0) scale(1);}}
-@keyframes softPulse{0%,100%{box-shadow:0 0 0 0 rgba(214,169,75,0);}50%{box-shadow:0 0 0 8px rgba(214,169,75,0.12);}}
-@keyframes flipReveal{from{transform:rotateY(180deg);}to{transform:rotateY(0deg);}}
-@keyframes shakeX{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px);}40%{transform:translateX(5px);}60%{transform:translateX(-4px);}80%{transform:translateX(3px);}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-@keyframes ringPop{0%{transform:scale(0.85);opacity:0;}60%{transform:scale(1.05);opacity:1;}100%{transform:scale(1);opacity:1;}}
+.selectable-card{cursor:pointer;transition:opacity 220ms ease,transform 220ms ease,box-shadow 160ms ease;}
+.selectable-card:hover{transform:translateY(-4px);}
+.selectable-card.picked-low{box-shadow:0 0 0 3px var(--brass-bright),0 4px 16px -2px rgba(240,196,107,0.55);}
 
-.in-view .anim-deal{animation:dealIn 480ms ease both;}
-.in-view .anim-flip{animation:flipReveal 520ms ease both;transform-style:preserve-3d;}
-.in-view .anim-shake{animation:shakeX 520ms ease 420ms both;}
-.in-view .anim-fade{animation:fadeUp 500ms ease both;}
-.in-view .anim-ring{animation:ringPop 420ms cubic-bezier(0.34,1.56,0.64,1) both;}
-.in-view .anim-glow{animation:softPulse 1800ms ease-in-out 2;}
-.hand-row .anim-deal:nth-child(1),.hand-row .anim-flip:nth-child(1){animation-delay:0ms;}
-.hand-row .anim-deal:nth-child(2),.hand-row .anim-flip:nth-child(2){animation-delay:130ms;}
-.hand-row .anim-deal:nth-child(3),.hand-row .anim-flip:nth-child(3){animation-delay:260ms;}
-.hand-total.anim-fade{animation-delay:380ms;}
-.win-tag.anim-fade{animation-delay:560ms;}
-.win-tag{display:inline-block;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;padding:4px 12px;border-radius:999px;margin-top:8px;}
-.win-tag.good{background:rgba(63,164,132,0.15);color:var(--sage-bright);border:1px solid rgba(63,164,132,0.3);}
-.win-tag.bad{background:rgba(225,93,69,0.15);color:var(--coral);border:1px solid rgba(225,93,69,0.3);}
+.foul-banner{text-align:center;font-size:12.5px;font-weight:700;color:var(--coral);background:rgba(225,93,69,0.1);border:1px solid rgba(225,93,69,0.3);border-radius:10px;padding:8px 12px;margin:10px 0;display:none;}
+.foul-banner.show{display:block;}
+
+/* ---- Betting ---- */
+.bet-row{background:rgba(0,0,0,0.18);border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0;}
+.bet-circles{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;}
+.bet-circle{width:76px;height:76px;border-radius:50%;border:2px dashed rgba(214,169,75,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:border-color 140ms ease,background 140ms ease;text-align:center;}
+.bet-circle:hover{border-color:rgba(214,169,75,0.7);}
+.bet-circle .spot-label{font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:700;color:var(--brass-bright);text-transform:uppercase;letter-spacing:0.4px;}
+.bet-circle .spot-odds{font-size:8.5px;color:var(--text-muted);margin-top:1px;}
+.bet-circle .spot-amt{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:800;margin-top:2px;min-height:16px;}
+.chip-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:12px 0 6px;}
+.chip{width:40px;height:40px;border-radius:50%;padding:0;border:2px solid rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;font-family:'Space Grotesk',sans-serif;color:#fff;flex-shrink:0;box-shadow:0 3px 8px -3px rgba(0,0,0,0.5);cursor:pointer;transition:transform 120ms ease;}
+.chip:hover{transform:translateY(-2px);}
+.chip.active{box-shadow:0 0 0 3px var(--brass-bright),0 3px 8px -3px rgba(0,0,0,0.5);}
+.chip-5{background:#3F6E52;} .chip-10{background:#2E5C8A;} .chip-25{background:#7A3B3B;}
+.chip-50{background:#6B4A9E;} .chip-100{background:#1A1D22;border-color:rgba(240,196,107,0.5);}
+.chip-hint{text-align:center;font-size:11.5px;color:var(--text-muted);margin:6px 0 0;}
+
+.action-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0 8px;}
+
+.outcome-badge{text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;min-height:26px;margin:8px 0;}
+.outcome-badge.win{color:var(--sage-bright);}
+.outcome-badge.loss{color:var(--coral);}
+.outcome-badge.push{color:var(--dusty-blue);}
+.why-panel{background:rgba(91,141,224,0.08);border:1px solid rgba(91,141,224,0.25);border-radius:12px;padding:12px 14px;font-size:12.5px;line-height:1.6;color:var(--text);margin:10px 0;display:none;}
+.why-panel.show{display:block;}
+.why-panel .label{display:block;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;color:var(--dusty-blue);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+.house-way-note{background:rgba(214,169,75,0.08);border:1px solid rgba(214,169,75,0.25);border-radius:12px;padding:12px 14px;font-size:12.5px;line-height:1.6;color:var(--text);margin:10px 0;display:none;}
+.house-way-note.show{display:block;}
+.house-way-note .label{display:block;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;color:var(--brass-bright);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+.side-bets-result{background:rgba(156,130,224,0.08);border:1px solid rgba(156,130,224,0.25);border-radius:12px;padding:12px 14px;font-size:12.5px;line-height:1.7;color:var(--text);margin:10px 0;display:none;}
+.side-bets-result.show{display:block;}
+
+.stats-flat{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 18px;}
+.stats-flat .stat{text-align:center;min-width:70px;}
+.stats-flat .stat .v{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;}
+.stats-flat .stat .k{font-size:10.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;}
+.history{font-size:12.5px;color:var(--text-muted);}
+.history details{margin-bottom:8px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;}
+.history summary{cursor:pointer;color:var(--text);font-weight:600;}
+.history .hist-body{margin-top:8px;line-height:1.6;}
+
+@media(max-width:560px){
+  .card,.flip-card,.card-slot{width:74px;height:104px;}
+  .low-slot-empty{width:74px;height:104px;}
+  .card-pip{font-size:30px;}
+  .card-idx{font-size:13px;}
+  .card-idx .pip{font-size:11px;}
+  .card-joker-label{font-size:8px;}
+  .hand-row{min-height:104px;}
+}
+@media(max-width:420px){
+  .card,.flip-card,.card-slot{width:58px;height:81px;}
+  .low-slot-empty{width:58px;height:81px;}
+  .card-pip{font-size:24px;}
+  .card-idx{font-size:11px;}
+  .card-idx .pip{font-size:9px;}
+  .card-joker-label{font-size:6.5px;}
+  .hand-row{min-height:81px;}
+}
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <a href="/" class="brand">Table Ready</a>
-  <div style="display:flex;gap:18px;align-items:center;">
-    <a href="/learn/glossary/" class="back">Glossary</a>
-    <a href="/" class="back">&larr; Back to the floor</a>
+<div class="wrap">
+
+<a href="/" class="back-link"><span class="back-dot"></span>Table Ready</a>
+
+<header>
+  <div>
+    <h1>Pai Gow Poker</h1>
+    <p class="tagline">Seven cards, split into a five-card hand and a two-card hand. Beat both of the dealer's hands to win.</p>
   </div>
+  <div class="bankroll-pill">
+    <span class="label">Bankroll</span>
+    <span class="pill-chip-stack" id="bankroll-chip-stack"></span>
+    <span class="amount" id="bankroll-amount">$1,000</span>
+  </div>
+</header>
+
+<div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
+  <button id="btn-toggle-settings">Table settings</button>
 </div>
 
-<div class="game-switch">
-  <button class="switch-btn active" id="switch-blackjack">Blackjack</button>
-  <button class="switch-btn" id="switch-baccarat">Baccarat</button>
-  <button class="switch-btn" id="switch-paigow">Pai Gow Poker</button>
-  <button class="switch-btn" id="switch-uth">Ultimate Texas Hold'em</button>
+<div class="panel" id="settings-panel" style="display:none;">
+  <h2 class="section">Table settings</h2>
+  <div class="check-row"><input type="checkbox" id="set-sidebets"><label for="set-sidebets">Show Fortune Bonus and Ace-High side bets</label></div>
+  <div class="check-row"><input type="checkbox" id="set-sound" checked><label for="set-sound">Sound effects</label></div>
+  <div class="check-row"><input type="checkbox" id="set-showodds" checked><label for="set-showodds">Show house-way comparison after each hand</label></div>
+  <div class="check-row"><input type="checkbox" id="set-turbo"><label for="set-turbo">Turbo — instant reveal, no pauses</label></div>
+  <button id="btn-reset-bankroll-settings" style="margin-top:8px;">Reset bankroll to 1000</button>
 </div>
 
-<div class="progress-rail" id="progress-rail"></div>
+<div class="layout-grid">
+<div class="table-felt">
 
-<div class="game-panel active fade-in" id="panel-blackjack">
-  <section class="game-hero">
-    <div class="hero-glow"></div>
-    <h1>How Blackjack works</h1>
-    <p>Seven quick steps, no rulebook required. Scroll through &mdash; each one shows exactly what happens at the table.</p>
-  </section>
-  <div id="blackjack-scenes"></div>
+  <p class="seat-label">Dealer</p>
+  <div class="hand-row" id="dealer-cards"></div>
+  <div class="hand-total" id="dealer-total">&nbsp;</div>
+
+  <p class="hint-line">This is Face-Up Pai Gow — the dealer's hand is set and revealed before you act on your own. Both of your hands must beat both of the dealer's to win. Win one, lose one is a push. Exact ties go to the dealer. Commission-free — but if the dealer's best hand is Ace-high with no pair, your Ante automatically pushes.</p>
+
+  <p class="seat-label">You</p>
+  <div class="hand-row" id="player-cards"></div>
+  <div class="hand-total" id="player-high-total">&nbsp;</div>
+  <div class="hand-total" id="player-low-total">&nbsp;</div>
+  <div class="foul-banner" id="foul-banner">This arrangement fouls — your Low Hand outranks your High Hand. Pick a different two cards.</div>
+
+  <div class="bet-row" id="bet-row">
+    <div class="bet-circles">
+      <div class="bet-circle" id="spot-ante" data-spot="ante" tabindex="0" role="button" aria-label="Ante bet">
+        <div class="spot-label">Ante</div>
+        <div class="spot-odds">Pays 1:1, no commission</div>
+        <div class="spot-amt" id="amt-ante"></div>
+      </div>
+      <div class="bet-circle" id="spot-fortune" data-spot="fortune" tabindex="0" role="button" aria-label="Fortune Bonus side bet, optional" style="display:none;">
+        <div class="spot-label">Fortune</div>
+        <div class="spot-odds">Straight+ pays</div>
+        <div class="spot-amt" id="amt-fortune"></div>
+      </div>
+      <div class="bet-circle" id="spot-acehigh" data-spot="aceHigh" tabindex="0" role="button" aria-label="Ace-High side bet, optional" style="display:none;">
+        <div class="spot-label">Ace-High</div>
+        <div class="spot-odds">Dealer forced pays</div>
+        <div class="spot-amt" id="amt-acehigh"></div>
+      </div>
+    </div>
+    <div class="chip-row" id="chip-row">
+      <button class="chip chip-5" id="chip-5" data-chip="5">5</button>
+      <button class="chip chip-10" id="chip-10" data-chip="10">10</button>
+      <button class="chip chip-25 active" id="chip-25" data-chip="25">25</button>
+      <button class="chip chip-50" id="chip-50" data-chip="50">50</button>
+      <button class="chip chip-100" id="chip-100" data-chip="100">100</button>
+    </div>
+    <p class="chip-hint">Pick a chip, then click a spot to bet it. Holding <b id="active-chip-label">$25</b>.</p>
+  </div>
+
+  <div class="action-row" id="action-row"></div>
+
+  <div class="outcome-badge" id="outcome-badge"></div>
+  <div class="why-panel" id="why-panel"></div>
+  <div class="house-way-note" id="house-way-note"></div>
+  <div class="side-bets-result" id="side-bets-result"></div>
+
 </div>
 
-<div class="game-panel" id="panel-baccarat">
-  <section class="game-hero">
-    <div class="hero-glow"></div>
-    <h1>How Baccarat works</h1>
-    <p>Seven quick steps covering everything from the deal to the one rule that trips everybody up.</p>
-  </section>
-  <div id="baccarat-scenes"></div>
+<div class="side-panels">
+<div class="panel">
+  <h2 class="section">Session</h2>
+  <div id="stats-grid" class="stats-flat"></div>
+</div>
+<div class="panel">
+  <h2 class="section">Recent hands</h2>
+  <div class="history" id="history"></div>
+</div>
+<div class="panel">
+  <h2 class="section">Hand rankings</h2>
+  <p class="foot-note" style="margin-top:0;">Standard poker hand rankings apply, with two Pai Gow-specific exceptions. The joker is semi-wild: it plays as an ace, or completes a straight, flush, or straight flush — whichever makes the best hand.</p>
+  <p class="foot-note"><b style="color:var(--brass-bright);">Five Aces</b> (four aces + the joker) is the single highest hand, above even a Royal Flush.</p>
+  <p class="foot-note"><b style="color:var(--brass-bright);">The wheel</b> (A-2-3-4-5) is a valid straight, but ranks as the <i>second</i>-highest straight — beaten by every other straight, even a low one like 6-5-4-3-2.</p>
+  <p class="foot-note">Rules cross-checked against Wizard of Odds, Pennsylvania Gaming Code §645a.6, and the official Hard Rock Atlantic City Face-Up Pai Gow Poker guide. The dealer's hand-setting logic here is a simplified house way, not the full casino-specific optimal ruleset.</p>
+</div>
+<div class="panel" id="bonus-paytable-panel" style="display:none;">
+  <h2 class="section">Bonus bet paytables</h2>
+  <p class="foot-note" style="margin-top:0;"><b style="color:var(--brass-bright);">Fortune Bonus</b> — judged on the single best hand from your own 7 cards, win or lose against the dealer. Straight 2:1, Trips 3:1, Flush 4:1, Full House 5:1, Quads 25:1, Straight Flush 50:1, Royal Flush 150:1, Five Aces 400:1, 7-card Straight Flush with joker 1000:1, without joker 8000:1. Anything below a Straight loses.</p>
+  <p class="foot-note"><b style="color:var(--brass-bright);">Ace-High Bonus</b> — wins only if the dealer is forced into an Ace-High Pai Gow. Dealer Ace-High without the joker 5:1, with the joker 15:1, dealer <i>and</i> player both Ace-High 40:1.</p>
+</div>
 </div>
 
-<div class="game-panel" id="panel-paigow">
-  <section class="game-hero">
-    <div class="hero-glow"></div>
-    <h1>How Pai Gow Poker works</h1>
-    <p>Nine quick steps &mdash; from splitting seven cards into two hands to the one dealer rule that pushes your bet outright.</p>
-  </section>
-  <div id="paigow-scenes"></div>
 </div>
 
-<div class="game-panel" id="panel-uth">
-  <section class="game-hero">
-    <div class="hero-glow"></div>
-    <h1>How Ultimate Texas Hold'em works</h1>
-    <p>Real hold'em rules, but you're only ever playing against the dealer. Ten quick steps, from the deal to the payout.</p>
-  </section>
-  <div id="uth-scenes"></div>
-</div>
+<footer style="text-align:center;">
+  <p class="foot-note" style="opacity:0.6;">For education only — a free practice table, not real-money gambling.</p>
+  <p class="foot-note" style="opacity:0.6;">© 2026 SledgeMakesGames. All rights reserved.</p>
+</footer>
 
-<footer>Table Ready — free practice tables, for education only.</footer>
+</div>
 
 <script>
-function cardHTML(rank, suit, extraClass){
-  var red = (suit==='♥'||suit==='♦');
-  var isFace = (rank==='J'||rank==='Q'||rank==='K');
-  var pip = isFace ? '' : '<span class="card-pip">'+suit+'</span>';
-  return '<div class="card'+(red?' red':'')+(extraClass?' '+extraClass:'')+'">'+
-    '<span class="card-idx"><span>'+rank+'</span><span class="pip">'+suit+'</span></span>'+
-    '<span class="card-idx br"><span>'+rank+'</span><span class="pip">'+suit+'</span></span>'+
-    pip+
-    '</div>';
+// ============ PAI GOW POKER CORE ENGINE ============
+// Verified against: Wizard of Odds (wizardofodds.com/games/pai-gow-poker/), Pennsylvania Gaming
+// Code 58 Pa. Code §645a.6, Maryland MDGaming Standard Rules, Nevada Gaming Commission STAX
+// Progressive rules PDF.
+//
+// Deck: 52 standard cards + 1 joker (53 total).
+// Joker: usable as an Ace, or to complete a Straight/Flush/Straight Flush/Royal Flush. In a wild
+// flush, the joker takes the highest rank not already present among the other four cards. In the
+// two-card hand, the joker is always an Ace (a two-card hand can never contain a straight/flush).
+// Ranking: A,K,Q,J,10,9,8,7,6,5,4,3,2 (ace high). The wheel (A-2-3-4-5) is a valid straight and
+// is the SECOND-highest straight (below K-Q-J-10-9, above every other straight) -- an unusual
+// Pai-Gow-specific rule confirmed directly on Wizard of Odds' own rules page.
+// Five Aces (four natural aces + the joker) is the single highest possible hand, above even a
+// royal flush.
+// Foul rule: the 5-card (high) hand must strictly outrank the 2-card (low) hand, or the whole
+// hand is an automatic loss.
+// Comparison: exact ties ("copies") go to the banker. Win both hands = win (5% commission on
+// wins); split (one win, one loss-or-tie) = push; lose or tie both = loss.
+
+var RANKS = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+var RANK_VAL = {'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,'J':11,'Q':12,'K':13,'A':14};
+var SUITS = ['s','h','d','c'];
+var CATEGORY = {
+  HIGH_CARD:0, PAIR:1, TWO_PAIR:2, TRIPS:3, STRAIGHT:4, FLUSH:5, FULL_HOUSE:6, QUADS:7,
+  STRAIGHT_FLUSH:8, FIVE_ACES:9
+};
+var CATEGORY_NAME = {
+  0:'High Card', 1:'Pair', 2:'Two Pair', 3:'Three of a Kind', 4:'Straight', 5:'Flush',
+  6:'Full House', 7:'Four of a Kind', 8:'Straight Flush', 9:'Five Aces'
+};
+
+function freshDeck(){
+  var d = [];
+  for(var i=0;i<SUITS.length;i++){
+    for(var j=0;j<RANKS.length;j++){
+      d.push({rank:RANKS[j], suit:SUITS[i], joker:false});
+    }
+  }
+  d.push({rank:'JOKER', suit:null, joker:true});
+  return d;
 }
-function faceDownCard(extraClass){
-  return '<div class="card'+(extraClass?' '+extraClass:'')+'" style="background:var(--panel-2);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:22px;">?</div>';
+function shuffle(deck, rng){
+  rng = rng || Math.random;
+  var d = deck.slice();
+  for(var i=d.length-1;i>0;i--){
+    var j = Math.floor(rng()*(i+1));
+    var t = d[i]; d[i]=d[j]; d[j]=t;
+  }
+  return d;
 }
-function jokerCardHTML(extraClass){
-  return '<div class="card joker'+(extraClass?' '+extraClass:'')+'" style="display:flex;flex-direction:column;align-items:center;justify-content:center;">'+
-    '<span style="font-size:9px;font-weight:800;letter-spacing:0.5px;">JOKER</span>'+
-    '<span style="font-size:22px;margin-top:3px;">&#9733;</span>'+
-    '</div>';
+
+// ---- Two-card (low) hand evaluation: pair or high card only, joker is always an ace ----
+function evalLow(cards){
+  // cards: array of exactly 2 card objects
+  var vals = cards.map(function(c){ return c.joker ? 14 : RANK_VAL[c.rank]; }).sort(function(a,b){ return b-a; });
+  var isPair = vals[0]===vals[1];
+  return {
+    category: isPair ? CATEGORY.PAIR : CATEGORY.HIGH_CARD,
+    ranks: vals, // sorted descending
+    label: isPair ? (rankLabel(vals[0])+'s') : (rankLabel(vals[0])+'-'+rankLabel(vals[1])+' high')
+  };
 }
-function betChip(label, amount, extraClass){
-  return '<div class="'+(extraClass||'')+'" style="text-align:center;">'+
-    '<div style="width:60px;height:60px;border-radius:50%;border:2px dashed rgba(240,196,107,0.45);display:flex;flex-direction:column;align-items:center;justify-content:center;">'+
-      '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:9.5px;font-weight:700;color:var(--brass-bright);text-transform:uppercase;letter-spacing:0.4px;">'+label+'</div>'+
-      (amount ? '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:13px;font-weight:800;margin-top:2px;">'+amount+'</div>' : '')+
-    '</div>'+
-  '</div>';
+function rankLabel(v){
+  if(v===14) return 'Ace'; if(v===13) return 'King'; if(v===12) return 'Queen'; if(v===11) return 'Jack';
+  return String(v);
 }
-function decisionBtn(label, primary, extraClass){
-  return '<span class="'+(extraClass||'')+'" style="display:inline-block;font-family:\'Space Grotesk\',sans-serif;font-weight:700;font-size:12.5px;padding:8px 15px;border-radius:9px;margin:4px;'+
-    (primary ? 'background:var(--brass);color:#20160A;' : 'background:var(--panel-2);border:1px solid var(--line);color:var(--text);')+
-    '">'+label+'</span>';
+function compareLow(a, b){
+  // returns >0 if a beats b, <0 if b beats a, 0 if exact tie (copy)
+  if(a.category !== b.category) return a.category - b.category;
+  for(var i=0;i<a.ranks.length;i++){
+    if(a.ranks[i] !== b.ranks[i]) return a.ranks[i] - b.ranks[i];
+  }
+  return 0;
 }
-function qualifyTag(qualifies){
-  return '<span class="win-tag anim-fade" style="'+
-    (qualifies ? 'background:rgba(63,164,132,0.15);color:var(--sage-bright);border:1px solid rgba(63,164,132,0.3);' : 'background:rgba(91,141,224,0.15);color:var(--dusty-blue);border:1px solid rgba(91,141,224,0.3);')+
-    '">'+(qualifies ? 'Dealer qualifies' : 'Dealer doesn\u2019t qualify')+'</span>';
+
+// ---- Five-card (high) hand evaluation ----
+// Handles the joker as: an ace, OR to complete a straight/flush/straight-flush, taking whichever
+// role produces the best possible 5-card hand (this is what "semi-wild" means in practice).
+function evalHigh(cards){
+  var natural = cards.filter(function(c){ return !c.joker; });
+  var hasJoker = cards.length !== natural.length;
+  if(!hasJoker){
+    return evalFiveNatural(cards);
+  }
+  // Five Aces: four natural aces + the joker
+  var aceCount = natural.filter(function(c){ return c.rank==='A'; }).length;
+  if(natural.length===4 && aceCount===4){
+    return { category: CATEGORY.FIVE_ACES, ranks:[14,14,14,14,14], label:'Five Aces', cards: cards };
+  }
+  // Try the joker as a plain ace (always valid -- this may legitimately pair/triple/quadruple
+  // with existing natural aces, since it genuinely IS an ace, not a substitute for some other
+  // rank), plus every substitute (rank,suit) that actually completes a straight, flush, or
+  // straight flush. Per the official rules (confirmed on Wizard of Odds' own page and Pennsylvania
+  // Gaming Code 645a.6), the joker is semi-wild -- it may ONLY become an ace or complete one of
+  // those four hand types, never "any missing card" to build trips/quads/a full house some other
+  // way. A substitute that doesn't actually produce a straight/flush/straight-flush is discarded.
+  var candidates = [];
+  candidates.push(evalFiveNatural(natural.concat([{rank:'A', suit:null, joker:true}])));
+  for(var s=0;s<SUITS.length;s++){
+    var suit = SUITS[s];
+    for(var r=0;r<RANKS.length;r++){
+      var rank = RANKS[r];
+      if(rank==='A') continue; // already covered by the plain-ace candidate above
+      var already = natural.some(function(c){ return c.rank===rank && c.suit===suit; });
+      if(already) continue;
+      var candidate = evalFiveNatural(natural.concat([{rank:rank, suit:suit, joker:true}]));
+      var legitRole = candidate.category===CATEGORY.STRAIGHT || candidate.category===CATEGORY.FLUSH || candidate.category===CATEGORY.STRAIGHT_FLUSH;
+      if(legitRole) candidates.push(candidate);
+    }
+  }
+  var best = candidates[0];
+  for(var i=1;i<candidates.length;i++){
+    if(compareHigh(candidates[i], best) > 0) best = candidates[i];
+  }
+  best.cards = cards;
+  return best;
 }
-function renderScene(container, num, heading, text, visualHTML, callout){
-  var s = document.createElement('div');
-  s.className = 'scene';
-  s.innerHTML =
-    '<div class="scene-text">'+
-      '<h2>'+heading+'</h2>'+
-      '<p>'+text+'</p>'+
-      (callout ? '<div class="callout">'+callout+'</div>' : '')+
-    '</div>'+
-    '<div class="scene-visual">'+visualHTML+'</div>';
-  container.appendChild(s);
-  observer.observe(s);
+function evalFiveNatural(cards){
+  var ranks = cards.map(function(c){ return RANK_VAL[c.rank]; }).sort(function(a,b){ return b-a; });
+  var suits = cards.map(function(c){ return c.suit; });
+  var isFlush = suits.every(function(s){ return s===suits[0]; }) && suits[0]!==null;
+  var straightInfo = detectStraight(ranks);
+  var counts = {};
+  ranks.forEach(function(r){ counts[r]=(counts[r]||0)+1; });
+  var groups = Object.keys(counts).map(function(k){ return {rank:parseInt(k,10), count:counts[k]}; });
+  groups.sort(function(a,b){ return b.count-a.count || b.rank-a.rank; });
+
+  if(isFlush && straightInfo.isStraight){
+    return { category: CATEGORY.STRAIGHT_FLUSH, ranks:[straightInfo.highCard], wheel:straightInfo.isWheel, label: straightInfo.isWheel ? 'Straight Flush (wheel)' : 'Straight Flush' };
+  }
+  if(groups[0].count===4){
+    var kicker = groups[1].rank;
+    return { category: CATEGORY.QUADS, ranks:[groups[0].rank, kicker], label:'Four of a Kind' };
+  }
+  if(groups[0].count===3 && groups[1].count===2){
+    return { category: CATEGORY.FULL_HOUSE, ranks:[groups[0].rank, groups[1].rank], label:'Full House' };
+  }
+  if(isFlush){
+    return { category: CATEGORY.FLUSH, ranks: ranks, label:'Flush' };
+  }
+  if(straightInfo.isStraight){
+    return { category: CATEGORY.STRAIGHT, ranks:[straightInfo.highCard], wheel:straightInfo.isWheel, label: straightInfo.isWheel ? 'Straight (wheel)' : 'Straight' };
+  }
+  if(groups[0].count===3){
+    var kickers = groups.slice(1).map(function(g){ return g.rank; });
+    return { category: CATEGORY.TRIPS, ranks:[groups[0].rank].concat(kickers), label:'Three of a Kind' };
+  }
+  if(groups[0].count===2 && groups[1].count===2){
+    var pairRanks = [groups[0].rank, groups[1].rank].sort(function(a,b){return b-a;});
+    var kick = groups[2].rank;
+    return { category: CATEGORY.TWO_PAIR, ranks: pairRanks.concat([kick]), label:'Two Pair' };
+  }
+  if(groups[0].count===2){
+    var ks = groups.slice(1).map(function(g){ return g.rank; });
+    return { category: CATEGORY.PAIR, ranks:[groups[0].rank].concat(ks), label:'Pair' };
+  }
+  return { category: CATEGORY.HIGH_CARD, ranks: ranks, label:'High Card' };
 }
-var currentGame = 'blackjack';
-var observer = new IntersectionObserver(function(entries){
-  entries.forEach(function(e){
-    if(e.isIntersecting){
-      e.target.classList.add('in-view');
-      var parent = e.target.parentElement;
-      if(parent && parent.id === currentGame+'-scenes'){
-        updateActiveDot(Array.prototype.indexOf.call(parent.children, e.target));
+function detectStraight(ranksDesc){
+  var uniq = Array.from(new Set(ranksDesc)).sort(function(a,b){ return b-a; });
+  if(uniq.length!==5) return {isStraight:false};
+  // Ace-high straight, e.g. K-Q-J-10-9 down to 6-5-4-3-2
+  if(uniq[0]-uniq[4]===4) return {isStraight:true, highCard:uniq[0], isWheel:false};
+  // The wheel: A-2-3-4-5 (ace plays low). Represented here as ranks [14,5,4,3,2].
+  if(uniq[0]===14 && uniq[1]===5 && uniq[2]===4 && uniq[3]===3 && uniq[4]===2) return {isStraight:true, highCard:5, isWheel:true};
+  return {isStraight:false};
+}
+function compareHigh(a, b){
+  if(a.category !== b.category) return a.category - b.category;
+  // Pai Gow's one explicit exception: the wheel is the *second*-highest straight/straight-flush,
+  // meaning any non-wheel straight of the same category beats it, even a low one like 6-5-4-3-2.
+  if((a.category===CATEGORY.STRAIGHT || a.category===CATEGORY.STRAIGHT_FLUSH)){
+    if(a.wheel && !b.wheel) return -1;
+    if(!a.wheel && b.wheel) return 1;
+    if(a.wheel && b.wheel) return 0;
+  }
+  for(var i=0;i<a.ranks.length;i++){
+    if(a.ranks[i] !== b.ranks[i]) return a.ranks[i] - b.ranks[i];
+  }
+  return 0;
+}
+
+// ---- Foul detection: the 5-card hand must strictly outrank the 2-card hand ----
+function isFoul(highEval, lowEval){
+  return compareHighVsLow(highEval, lowEval) <= 0;
+}
+// Compares a 5-card category+ranks against a 2-card category+ranks on the same ordinal scale
+// (category first, then ranks) -- used only for the foul check, not for player-vs-banker.
+function compareHighVsLow(high, low){
+  if(high.category !== low.category) return high.category - low.category;
+  // both PAIR or both HIGH_CARD categories -- compare the pair rank / top card directly
+  return high.ranks[0] - low.ranks[0];
+}
+
+// ---- Splitting 7 cards into every legal (non-foul) high+low arrangement ----
+function allLegalSplits(sevenCards){
+  var results = [];
+  var idx = [0,1,2,3,4,5,6];
+  // choose 2 of the 7 indices for the low hand; the remaining 5 form the high hand
+  for(var i=0;i<7;i++){
+    for(var j=i+1;j<7;j++){
+      var lowIdx = [i,j];
+      var highIdx = idx.filter(function(k){ return k!==i && k!==j; });
+      var lowCards = lowIdx.map(function(k){ return sevenCards[k]; });
+      var highCards = highIdx.map(function(k){ return sevenCards[k]; });
+      var lowEval = evalLow(lowCards);
+      var highEval = evalHigh(highCards);
+      if(!isFoul(highEval, lowEval)){
+        results.push({ high: highCards, highEval: highEval, low: lowCards, lowEval: lowEval });
       }
     }
+  }
+  return results;
+}
+
+// ---- Outcome resolution ----
+// Returns 'win' | 'push' | 'loss' from the PLAYER's perspective. Exact ties go to the banker.
+function resolveOutcome(playerHigh, playerLow, bankerHigh, bankerLow){
+  var highCmp = compareHigh(playerHigh, bankerHigh); // >0 player wins, <0 banker wins, 0 = copy (banker wins)
+  var lowCmp = compareLow(playerLow, bankerLow);
+  var playerWinsHigh = highCmp > 0;
+  var playerWinsLow = lowCmp > 0;
+  if(playerWinsHigh && playerWinsLow) return 'win';
+  if(!playerWinsHigh && !playerWinsLow) return 'loss'; // includes ties on both, or loss+tie
+  return 'push';
+}
+function commissionPayout(betAmount, commissionRate){
+  commissionRate = commissionRate===undefined ? 0.05 : commissionRate;
+  return betAmount * (1 - commissionRate);
+}
+
+// ---- Face-Up Pai Gow specific rules ----
+// "Ace-High Pai Gow": the dealer's best possible 5-card hand is exactly High Card, topped by an
+// Ace. Confirmed via the official Hard Rock Atlantic City Face-Up Pai Gow Poker guide: "If the
+// best five card hand the dealer can make is an Ace High, then the Pai Gow wager is an automatic
+// push, regardless of the player's cards." This is a narrower condition than "no pair" in general
+// -- a no-pair hand topped by a King or lower does NOT trigger this rule.
+function isAceHighPaiGow(best5Eval){
+  return best5Eval.category === CATEGORY.HIGH_CARD && best5Eval.ranks[0] === 14;
+}
+
+// Detects a 7-card straight flush: all 7 cards (accounting for the joker) form one continuous
+// same-suit run of 7 consecutive ranks. Returns 'natural' (all 7 cards do it without the joker),
+// 'joker' (the joker fills the one gap needed), or null (no 7-card straight flush present).
+function sevenCardStraightFlushType(sevenCards){
+  var natural = sevenCards.filter(function(c){ return !c.joker; });
+  var hasJoker = natural.length !== sevenCards.length;
+  var bySuit = {};
+  natural.forEach(function(c){ (bySuit[c.suit] = bySuit[c.suit]||[]).push(RANK_VAL[c.rank]); });
+  var suits = Object.keys(bySuit);
+  for(var i=0;i<suits.length;i++){
+    var ranks = Array.from(new Set(bySuit[suits[i]])).sort(function(a,b){return a-b;});
+    if(!hasJoker && ranks.length===7 && ranks[6]-ranks[0]===6){
+      return 'natural';
+    }
+    if(hasJoker && ranks.length===6 && (ranks[5]-ranks[0]===5 || ranks[5]-ranks[0]===6)){
+      // span===5: a gapless run of 6, joker extends it at either edge.
+      // span===6: 6 ranks spanning a 7-value range with exactly one value missing (since min and
+      // max are themselves present among the 6, the single gap must be strictly between them) --
+      // the joker fills that internal gap. Both are genuine 7-card straight flush completions.
+      return 'joker';
+    }
+  }
+  return null;
+}
+
+// Fortune Bonus paytable, official Hard Rock Atlantic City Face-Up Pai Gow guide. Judged on the
+// single best possible hand from all 7 cards (not the high/low split). Known simplification: the
+// rare "Royal Flush plus Royal Match" tier (2000:1, requiring the two leftover cards to also match
+// the royal flush's suit) is not separately detected here -- a plain Royal Flush pays the base
+// 150:1 tier instead. This only ever under-pays that one specific, extremely rare combination; it
+// never overpays.
+var FORTUNE_BONUS_TABLE = [
+  { test: function(seven, best7){ return sevenCardStraightFlushType(seven)==='natural'; }, mult: 8000 },
+  { test: function(seven, best7){ return sevenCardStraightFlushType(seven)==='joker'; }, mult: 1000 },
+  { test: function(seven, best7){ return best7.category===CATEGORY.FIVE_ACES; }, mult: 400 },
+  { test: function(seven, best7){ return best7.category===CATEGORY.STRAIGHT_FLUSH && best7.ranks[0]===14 && !best7.wheel; }, mult: 150 }, // royal flush
+  { test: function(seven, best7){ return best7.category===CATEGORY.STRAIGHT_FLUSH; }, mult: 50 },
+  { test: function(seven, best7){ return best7.category===CATEGORY.QUADS; }, mult: 25 },
+  { test: function(seven, best7){ return best7.category===CATEGORY.FULL_HOUSE; }, mult: 5 },
+  { test: function(seven, best7){ return best7.category===CATEGORY.FLUSH; }, mult: 4 },
+  { test: function(seven, best7){ return best7.category===CATEGORY.TRIPS; }, mult: 3 },
+  { test: function(seven, best7){ return best7.category===CATEGORY.STRAIGHT; }, mult: 2 }
+];
+function fortuneBonusResult(sevenCards, betAmount){
+  var best7 = bestFiveOfSeven(sevenCards);
+  for(var i=0;i<FORTUNE_BONUS_TABLE.length;i++){
+    var tier = FORTUNE_BONUS_TABLE[i];
+    if(tier.test(sevenCards, best7)) return { win:true, multiplier:tier.mult, payout: betAmount*tier.mult, bestHand: best7 };
+  }
+  return { win:false, multiplier:0, payout:0, bestHand: best7 };
+}
+
+// Ace-High side bet: wins based on whether the dealer is forced into an Ace-High Pai Gow, and (if
+// so) whether the joker was needed to reach that Ace, and whether the player also has one.
+// Official paytable: dealer AND player both Ace-High = 40:1; dealer Ace-High using the joker =
+// 15:1; dealer Ace-High without the joker = 5:1.
+function aceHighBonusResult(dealerBest7, dealerCards, playerBest7, betAmount){
+  if(!isAceHighPaiGow(dealerBest7)) return { win:false, multiplier:0, payout:0 };
+  // If no natural ace exists among the dealer's 7 cards, the joker must be supplying the ace --
+  // there's no other way to reach an Ace-High result. This is more robust than trying to inspect
+  // which specific 5-card combination bestFiveOfSeven happened to settle on internally.
+  var hasNaturalAce = dealerCards.some(function(c){ return !c.joker && c.rank==='A'; });
+  var dealerUsedJoker = !hasNaturalAce;
+  var playerAlsoAceHigh = isAceHighPaiGow(playerBest7);
+  if(playerAlsoAceHigh) return { win:true, multiplier:40, payout: betAmount*40 };
+  if(dealerUsedJoker) return { win:true, multiplier:15, payout: betAmount*15 };
+  return { win:true, multiplier:5, payout: betAmount*5 };
+}
+
+// ---- Simplified house way for the dealer ----
+// This is a deliberately SIMPLE, honestly-labeled house way -- not the full casino-specific
+// optimal ruleset (which runs to dozens of lookup tables per casino; see Wizard of Odds' Foxwoods
+// strategy page for the scale of the full version). It follows the widely-documented general
+// principles: play the strongest legal high hand, using standard "always/never split" pair rules
+// and a simplified two-pair split threshold, while never foul-ing the hand.
+function setHouseWay(sevenCards){
+  var legal = allLegalSplits(sevenCards);
+  // Highest 5-of-7 hand ignoring the split, used to detect "no pair possible" and straight/flush cases
+  var best7 = bestFiveOfSeven(sevenCards);
+
+  // Five Aces, Straight Flush or better in the best possible 5-card hand: always play it as high,
+  // with the best remaining 2-card low hand (never worth breaking for anything at this level).
+  if(best7.category >= CATEGORY.STRAIGHT_FLUSH){
+    return bestLegalForFixedHigh(legal, best7);
+  }
+
+  // Four of a Kind: keep quads together for 2s-6s; split (playing the pair alongside a straight/
+  // flush kicker or the two highest remaining kickers) for 7s and up, which is the simplified
+  // version of the widely-documented "keep small quads, split big quads" rule.
+  var quadGroup = rankGroups(sevenCards).find(function(g){ return g.count===4; });
+  if(quadGroup){
+    if(quadGroup.rank <= 6){
+      return bestLegalKeepingQuads(legal, quadGroup.rank);
+    }
+    return bestLegalSplittingQuads(legal, sevenCards, quadGroup.rank);
+  }
+
+  // Full house from trips+pair among the 7 cards: keep trips+pair together as the high hand
+  // unless a pair of 7s or better can be made in the low hand by splitting -- the simplified
+  // version of the documented "split for 7s-or-better low pair" rule.
+  var tripsGroup = rankGroups(sevenCards).find(function(g){ return g.count===3; });
+  var pairGroups = rankGroups(sevenCards).filter(function(g){ return g.count===2; });
+  if(tripsGroup && pairGroups.length>=1 && best7.category===CATEGORY.FULL_HOUSE){
+    var bestPair = pairGroups.sort(function(a,b){ return b.rank-a.rank; })[0];
+    if(bestPair.rank >= 7){
+      return bestLegalSplittingTripsForPair(legal, tripsGroup.rank, bestPair.rank);
+    }
+    return bestLegalKeepingFullHouse(legal, tripsGroup.rank, bestPair.rank);
+  }
+
+  // Two pair: split by default (higher pair + 3 best kickers in high, lower pair in low), which
+  // multiple independent sources confirm is the common case. The documented exception is keeping
+  // both pairs together when the LOWER pair is genuinely weak (the "Low Pair" band, 2s-6s) --
+  // splitting a weak pair barely strengthens the low hand, so it's not worth weakening the high
+  // hand's kickers for. This replaces a previous threshold that had the relationship backwards
+  // (keeping together by default, splitting only for low-value pairs).
+  if(pairGroups.length>=2){
+    var sortedPairs = pairGroups.sort(function(a,b){ return b.rank-a.rank; });
+    var high2 = sortedPairs[0], low2 = sortedPairs[1];
+    if(low2.rank <= 6){
+      return bestLegalKeepingTwoPair(legal, high2.rank, low2.rank);
+    }
+    return bestLegalSplittingTwoPair(legal, high2.rank, low2.rank);
+  }
+
+  // Everything else (one pair, no pair, trips-only, or a non-paired straight/flush hand): find
+  // the best achievable high-hand CATEGORY among all legal splits, then -- critically -- among
+  // splits that achieve it, maximize the LOW hand rather than the high hand's kickers. This is
+  // the core, verified Pai Gow principle: your low hand should be your second-best possible hand,
+  // not your worst. Kicker differences in the high hand rarely decide anything once its category
+  // is set, but every rank point in the low hand directly affects whether it wins. Confirmed
+  // against ten independent sources and the exact worked examples they give (e.g. A,K,Q,10,7,6,5
+  // with no pair sets High: A,10,7,6,5 / Low: K,Q -- NOT the two lowest cards).
+  return bestCategoryThenMaximizeLow(legal);
+}
+function bestCategoryThenMaximizeLow(legalSplits){
+  var bestCategory = -1;
+  legalSplits.forEach(function(s){ if(s.highEval.category > bestCategory) bestCategory = s.highEval.category; });
+  var candidates = legalSplits.filter(function(s){ return s.highEval.category === bestCategory; });
+  return maximizeLowAmong(candidates);
+}
+function rankGroups(cards){
+  var counts = {};
+  cards.forEach(function(c){
+    var r = c.joker ? 14 : RANK_VAL[c.rank];
+    counts[r] = (counts[r]||0)+1;
   });
-}, {threshold:0.4});
+  return Object.keys(counts).map(function(k){ return {rank:parseInt(k,10), count:counts[k]}; });
+}
+function pointValue(rank){ return rank===14 ? 14 : rank; } // simplified point scale for the two-pair threshold
+function bestFiveOfSeven(cards){
+  var best = null;
+  for(var i=0;i<cards.length;i++){
+    var rest5 = cards.slice(0,i).concat(cards.slice(i+1));
+    for(var j=0;j<rest5.length;j++){
+      var five = rest5.slice(0,j).concat(rest5.slice(j+1));
+      var ev = evalHigh(five);
+      if(!best || compareHigh(ev, best) > 0) best = ev;
+    }
+  }
+  return best;
+}
+function maximizeLowAmong(splits){
+  var best = splits[0];
+  for(var i=1;i<splits.length;i++){
+    var cur = splits[i];
+    var c = compareLow(cur.lowEval, best.lowEval);
+    if(c>0 || (c===0 && compareHigh(cur.highEval, best.highEval) > 0)) best = cur;
+  }
+  return best;
+}
+function bestLegalForFixedHigh(legalSplits, targetHighEval){
+  var matches = legalSplits.filter(function(s){ return compareHigh(s.highEval, targetHighEval)===0; });
+  var pool = matches.length ? matches : legalSplits;
+  var best = pool[0];
+  for(var i=1;i<pool.length;i++){ if(compareLow(pool[i].lowEval, best.lowEval) > 0) best = pool[i]; }
+  return best;
+}
+function bestLegalKeepingQuads(legalSplits, quadRank){
+  var matches = legalSplits.filter(function(s){ return s.highEval.category===CATEGORY.QUADS && s.highEval.ranks[0]===quadRank; });
+  return matches.length ? maximizeLowAmong(matches) : maximizeLowAmong(legalSplits);
+}
+function bestLegalSplittingQuads(legalSplits, sevenCards, quadRank){
+  var matches = legalSplits.filter(function(s){
+    return s.lowEval.category===CATEGORY.PAIR && s.lowEval.ranks[0]===quadRank;
+  });
+  return matches.length ? maximizeLowAmong(matches) : bestLegalKeepingQuads(legalSplits, quadRank);
+}
+function bestLegalKeepingFullHouse(legalSplits, tripsRank, pairRank){
+  var matches = legalSplits.filter(function(s){ return s.highEval.category===CATEGORY.FULL_HOUSE && s.highEval.ranks[0]===tripsRank && s.highEval.ranks[1]===pairRank; });
+  return matches.length ? maximizeLowAmong(matches) : maximizeLowAmong(legalSplits);
+}
+function bestLegalSplittingTripsForPair(legalSplits, tripsRank, pairRank){
+  var matches = legalSplits.filter(function(s){ return s.lowEval.category===CATEGORY.PAIR && s.lowEval.ranks[0]===pairRank; });
+  return matches.length ? maximizeLowAmong(matches) : bestLegalKeepingFullHouse(legalSplits, tripsRank, pairRank);
+}
+function bestLegalKeepingTwoPair(legalSplits, highPairRank, lowPairRank){
+  var matches = legalSplits.filter(function(s){
+    return s.highEval.category===CATEGORY.TWO_PAIR && s.highEval.ranks[0]===highPairRank && s.highEval.ranks[1]===lowPairRank;
+  });
+  return matches.length ? maximizeLowAmong(matches) : maximizeLowAmong(legalSplits);
+}
+function bestLegalSplittingTwoPair(legalSplits, highPairRank, lowPairRank){
+  var matches = legalSplits.filter(function(s){
+    return s.lowEval.category===CATEGORY.PAIR && s.lowEval.ranks[0]===lowPairRank;
+  });
+  return matches.length ? maximizeLowAmong(matches) : bestLegalKeepingTwoPair(legalSplits, highPairRank, lowPairRank);
+}
 
-/* ============ BLACKJACK SCENES ============ */
-var bjContainer = document.getElementById('blackjack-scenes');
+if(typeof module !== 'undefined'){
+  module.exports = {
+    RANKS, RANK_VAL, SUITS, CATEGORY, CATEGORY_NAME,
+    freshDeck, shuffle, evalLow, evalHigh, compareLow, compareHigh,
+    isFoul, allLegalSplits, resolveOutcome, commissionPayout, setHouseWay,
+    bestFiveOfSeven, detectStraight,
+    isAceHighPaiGow, sevenCardStraightFlushType, fortuneBonusResult, aceHighBonusResult
+  };
+}
 
-renderScene(bjContainer, 1, 'The goal', 'Get closer to 21 than the dealer &mdash; without going over 21. That\'s the entire game.',
-  '<div style="display:flex;gap:28px;">'+
-    '<div><div class="hand-label">You</div><div class="hand-row">'+cardHTML('K','♠','anim-deal')+cardHTML('9','♥','anim-deal')+'</div><div class="hand-total win anim-fade">19</div><div style="text-align:center;"><span class="win-tag good anim-fade">You win</span></div></div>'+
-    '<div><div class="hand-label">Dealer</div><div class="hand-row">'+cardHTML('Q','♦','anim-deal')+cardHTML('6','♣','anim-deal')+'</div><div class="hand-total anim-fade">16</div></div>'+
-  '</div>');
 
-renderScene(bjContainer, 2, 'Card values', 'Number cards count as their number. Every face card is worth 10. An Ace is 1 or 11 &mdash; whichever helps your hand more.',
-  '<div style="display:flex;gap:14px;">'+
-    '<div style="text-align:center;">'+cardHTML('7','♠','anim-deal')+'<div class="hand-total anim-fade" style="font-size:15px;">7</div></div>'+
-    '<div style="text-align:center;">'+cardHTML('K','♥','anim-deal')+'<div class="hand-total anim-fade" style="font-size:15px;">10</div></div>'+
-    '<div style="text-align:center;">'+cardHTML('A','♣','anim-deal')+'<div class="hand-total anim-fade" style="font-size:15px;">1 or 11</div></div>'+
-  '</div>');
 
-renderScene(bjContainer, 3, 'The deal', 'You get two cards face up. The dealer gets two as well &mdash; but only one of them is shown.',
-  '<div style="display:flex;gap:28px;">'+
-    '<div><div class="hand-label">You</div><div class="hand-row">'+cardHTML('8','♦','anim-deal')+cardHTML('4','♠','anim-deal')+'</div><div class="hand-total anim-fade">12</div></div>'+
-    '<div><div class="hand-label">Dealer</div><div class="hand-row">'+cardHTML('9','♣','anim-deal')+faceDownCard('anim-deal')+'</div><div class="hand-total anim-fade">9 + ?</div></div>'+
-  '</div>');
+/* ============ CARD RENDERING ============ */
+var SUIT_SYMBOL = {s:'♠', h:'♥', d:'♦', c:'♣'};
+function suitSymbol(s){ return SUIT_SYMBOL[s]; }
+function isRedSuit(s){ return s==='h' || s==='d'; }
+function displayRank(r){ return r==='10' ? '10' : r; }
 
-renderScene(bjContainer, 4, 'Hit or stand', 'Hit to take another card and get closer to 21. Stand to stop right where you are.',
-  '<div><div class="hand-label">You</div><div class="hand-row">'+cardHTML('6','♠')+cardHTML('7','♥')+cardHTML('7','♦','anim-deal')+'</div><div class="hand-total anim-fade">20</div><div style="text-align:center;"><span class="win-tag good anim-fade anim-glow">Stand</span></div></div>');
+function jokerStarSVG(){
+  return '<svg viewBox="0 0 40 40" width="30" height="30" style="overflow:visible;">'+
+    '<polygon points="20,2 24.5,14.5 38,15.5 27.5,24 31,37 20,29.5 9,37 12.5,24 2,15.5 15.5,14.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>'+
+  '</svg>';
+}
+function cardFaceInnerHTML(card){
+  if(card.joker){
+    return '<span class="card-joker-label">JOKER</span>'+
+      '<span class="card-joker-icon">'+jokerStarSVG()+'</span>'+
+      '<span class="card-joker-label br">JOKER</span>';
+  }
+  var r = displayRank(card.rank);
+  var suit = suitSymbol(card.suit);
+  return '<span class="card-idx"><span>'+r+'</span><span class="pip">'+suit+'</span></span>'+
+    '<span class="card-idx br"><span>'+r+'</span><span class="pip">'+suit+'</span></span>'+
+    '<span class="card-pip">'+suit+'</span>';
+}
+function cardClasses(card){
+  if(card.joker) return 'joker';
+  return isRedSuit(card.suit) ? 'red' : '';
+}
+function makeFaceUpCard(card, extraClass){
+  var wrap = document.createElement('div');
+  wrap.className = 'card selectable-card '+cardClasses(card)+(extraClass?' '+extraClass:'');
+  wrap.innerHTML = cardFaceInnerHTML(card);
+  wrap._card = card;
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ wrap.classList.add('show'); }); });
+  return wrap;
+}
+function makeStaticFaceUpCard(card, extraClass){
+  // Like makeFaceUpCard but not selectable (used for the dealer's revealed hand)
+  var wrap = document.createElement('div');
+  wrap.className = 'card '+cardClasses(card)+(extraClass?' '+extraClass:'');
+  wrap.innerHTML = cardFaceInnerHTML(card);
+  wrap._card = card;
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ wrap.classList.add('show'); }); });
+  return wrap;
+}
+function makeFlipCard(card){
+  var wrap = document.createElement('div');
+  wrap.className = 'flip-card';
+  var inner = document.createElement('div');
+  inner.className = 'flip-inner';
+  var back = document.createElement('div');
+  back.className = 'flip-back';
+  back.textContent = '?';
+  var front = document.createElement('div');
+  front.className = 'flip-front '+cardClasses(card);
+  front.innerHTML = cardFaceInnerHTML(card);
+  inner.appendChild(back);
+  inner.appendChild(front);
+  wrap.appendChild(inner);
+  wrap._card = card;
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ wrap.classList.add('show'); }); });
+  return wrap;
+}
+function flipCardUp(el){ el.classList.add('flipped'); }
 
-renderScene(bjContainer, 5, 'Busting', 'Go over 21 and you lose immediately &mdash; it doesn\'t matter what the dealer ends up with.',
-  '<div class="anim-shake"><div class="hand-label">You</div><div class="hand-row">'+cardHTML('10','♠')+cardHTML('8','♥')+cardHTML('6','♦','anim-deal')+'</div><div class="hand-total bust anim-fade">24</div><div style="text-align:center;"><span class="win-tag bad anim-fade">Bust</span></div></div>');
+/* ============ SOUND ============ */
+var audioCtx=null;
+function ensureAudioCtx(){
+  if(audioCtx) return audioCtx;
+  var Ctx=window.AudioContext||window.webkitAudioContext;
+  if(!Ctx) return null;
+  audioCtx=new Ctx();
+  return audioCtx;
+}
+function playTone(freq, duration, type, volume){
+  if(!G.soundOn) return;
+  var ctx=ensureAudioCtx();
+  if(!ctx) return;
+  var osc=ctx.createOscillator();
+  var gain=ctx.createGain();
+  osc.type=type||'sine';
+  osc.frequency.value=freq;
+  gain.gain.setValueAtTime(volume||0.06, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+duration);
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.start(); osc.stop(ctx.currentTime+duration);
+}
+function sfxFlip(){ if(G.turbo) return; playTone(560,0.05,'square',0.03); }
+function sfxChip(){ playTone(500,0.04,'triangle',0.035); }
+function sfxDeal(){ if(G.turbo) return; playTone(420,0.035,'square',0.02); }
+function sfxWin(){ playTone(659,0.11,'sine',0.05); setTimeout(function(){ playTone(880,0.16,'sine',0.05); }, 90); }
+function sfxLose(){ playTone(196,0.22,'sine',0.045); }
+function sfxPush(){ playTone(392,0.14,'sine',0.04); }
 
-renderScene(bjContainer, 6, 'Blackjack', 'An Ace plus any 10-value card on your first two cards is a natural blackjack. It pays 3 to 2 &mdash; better than an ordinary win.',
-  '<div style="text-align:center;"><div class="hand-label">You</div><div class="hand-row anim-ring">'+cardHTML('A','♠')+cardHTML('K','♥')+'</div><div class="hand-total win anim-fade">21</div><span class="win-tag good anim-fade">Blackjack &mdash; pays 3:2</span></div>',
-  null);
+/* ============ GAME STATE ============ */
+/* ============ SHARED BANKROLL (persisted across all games on the site) ============ */
+var HOUSE_BANKROLL_KEY = 'house_edge_bankroll_v1';
+function hasStorage(){ try{ return typeof localStorage!=='undefined' && localStorage!==null; }catch(e){ return false; } }
+function loadSharedBankroll(){
+  if(!hasStorage()) return null;
+  try{
+    var raw = localStorage.getItem(HOUSE_BANKROLL_KEY);
+    if(!raw) return null;
+    var parsed = JSON.parse(raw);
+    if(typeof parsed.balance==='number' && !isNaN(parsed.balance)) return parsed.balance;
+    return null;
+  }catch(e){ return null; }
+}
+function saveSharedBankroll(){
+  if(!hasStorage()) return;
+  try{ localStorage.setItem(HOUSE_BANKROLL_KEY, JSON.stringify({balance:G.bankroll, lastUpdated:new Date().toISOString()})); }catch(e){}
+}
 
-renderScene(bjContainer, 7, "Dealer's turn", 'Once you stand, the hidden card flips face up. The dealer then has to keep hitting until reaching 17 &mdash; no decisions, just the rule.',
-  '<div><div class="hand-label">Dealer</div><div class="hand-row">'+cardHTML('9','♣')+cardHTML('7','♦','anim-flip')+cardHTML('5','♠','anim-deal')+'</div><div class="hand-total win anim-fade">21 &mdash; dealer stands</div></div>');
+var G = {
+  phase: 'betting', // betting | arranging | revealing | resolved
+  bankroll: 1000,
+  activeChip: 25,
+  bets: { ante: 0, fortune: 0, aceHigh: 0 },
+  sideBetsEnabled: false,
+  deck: [],
+  playerCards: [],
+  dealerCards: [],
+  pickedLow: [], // array of card objects (by reference) currently picked for the low hand, max 2
+  playerHighEval: null, playerLowEval: null, playerHighCards: null, playerLowCards: null,
+  dealerHighEval: null, dealerLowEval: null, dealerHighCards: null, dealerLowCards: null,
+  result: null,
+  matchedHouseWay: null,
+  actionLocked: false,
+  turbo: false,
+  soundOn: true,
+  showHouseWayCompare: true,
+  stats: { hands:0, wins:0, pushes:0, losses:0, net:0 },
+  history: []
+};
 
-var bcContainer = document.getElementById('baccarat-scenes');
+function formatMoney(n){ return '$'+Math.round(n).toLocaleString('en-US'); }
+function signedMoney(n){
+  var rounded = Math.round(Math.abs(n)*100)/100;
+  return (n<0?'-':(n>0?'+':'')) + '$' + rounded.toLocaleString('en-US');
+}
 
-renderScene(bcContainer, 1, 'The goal', 'Bet on which hand gets closer to 9 &mdash; Banker, Player, or a Tie between them. You\'re not playing either hand yourself.',
-  '<div style="display:flex;gap:28px;">'+
-    '<div><div class="hand-label">Banker</div><div class="hand-row">'+cardHTML('7','♠','anim-deal')+cardHTML('K','♥','anim-deal')+'</div><div class="hand-total win anim-fade">7</div><div style="text-align:center;"><span class="win-tag good anim-fade">Banker wins</span></div></div>'+
-    '<div><div class="hand-label">Player</div><div class="hand-row">'+cardHTML('4','♦','anim-deal')+cardHTML('A','♣','anim-deal')+'</div><div class="hand-total anim-fade">5</div></div>'+
-  '</div>');
+function selectChip(v){
+  G.activeChip = v;
+  sfxChip();
+  document.querySelectorAll('.chip').forEach(function(c){ c.classList.toggle('active', parseInt(c.dataset.chip,10)===v); });
+  document.getElementById('active-chip-label').textContent = formatMoney(v);
+}
+function placeBet(spot){
+  if(G.phase!=='betting') return;
+  var amt = G.activeChip;
+  var totalCommitted = G.bets.ante + (G.bets.fortune||0) + (G.bets.aceHigh||0);
+  if(G.bankroll < totalCommitted + amt) return;
+  G.bets[spot] += amt;
+  sfxChip();
+  renderBetCircle();
+  renderActionRow();
+}
+function clearBets(){
+  G.bets.ante = 0; G.bets.fortune = 0; G.bets.aceHigh = 0;
+  renderBetCircle();
+  renderActionRow();
+}
+function renderBetCircle(){
+  document.getElementById('amt-ante').textContent = G.bets.ante>0 ? formatMoney(G.bets.ante) : '';
+  document.getElementById('amt-fortune').textContent = G.bets.fortune>0 ? formatMoney(G.bets.fortune) : '';
+  document.getElementById('amt-acehigh').textContent = G.bets.aceHigh>0 ? formatMoney(G.bets.aceHigh) : '';
+}
+function renderBankroll(){
+  document.getElementById('bankroll-amount').textContent = formatMoney(G.bankroll);
+}
 
-renderScene(bcContainer, 2, 'Card values', 'Aces count as 1. Number cards count as their number. 10s and every face card are all worth 0.',
-  '<div style="display:flex;gap:14px;">'+
-    '<div style="text-align:center;">'+cardHTML('A','♠','anim-deal')+'<div class="hand-total anim-fade" style="font-size:15px;">1</div></div>'+
-    '<div style="text-align:center;">'+cardHTML('7','♥','anim-deal')+'<div class="hand-total anim-fade" style="font-size:15px;">7</div></div>'+
-    '<div style="text-align:center;">'+cardHTML('K','♣','anim-deal')+'<div class="hand-total anim-fade" style="font-size:15px;">0</div></div>'+
-  '</div>');
+/* ============ DEALING ============ */
+function dealHand(){
+  if(G.phase!=='betting') return;
+  if(G.bets.ante<=0) return;
+  var totalBet = G.bets.ante + (G.bets.fortune||0) + (G.bets.aceHigh||0);
+  if(totalBet > G.bankroll) return;
+  G.actionLocked = false;
+  G.bankroll -= totalBet;
+  renderBankroll();
+  sfxDeal();
+  var deck = shuffle(freshDeck());
+  G.playerCards = deck.slice(0,7);
+  G.dealerCards = deck.slice(7,14);
+  G.deck = deck.slice(14);
+  G.pickedLow = [];
+  G.playerHighEval = null; G.playerLowEval = null; G.playerHighCards = null; G.playerLowCards = null;
+  G.dealerHighEval = null; G.dealerLowEval = null; G.dealerHighCards = null; G.dealerLowCards = null;
+  G.result = null; G.matchedHouseWay = null; G.dealerIsAceHigh = false;
+  G.phase = 'dealer-revealing';
+  document.getElementById('outcome-badge').className = 'outcome-badge';
+  document.getElementById('outcome-badge').textContent = '';
+  document.getElementById('why-panel').classList.remove('show');
+  document.getElementById('house-way-note').classList.remove('show');
+  document.getElementById('bet-row').style.display = 'none';
+  renderPlayerCards(); // your own cards are visible immediately -- no reason to hide them from you
+  document.getElementById('player-high-total').innerHTML = '&nbsp;';
+  document.getElementById('player-low-total').innerHTML = '<i style="color:var(--text-muted);">Waiting for the dealer\'s hand\u2026</i>';
+  document.getElementById('foul-banner').classList.remove('show');
+  renderActionRow();
+  revealDealerHandFirst();
+}
+function renderDealerFaceDown(){
+  var el = document.getElementById('dealer-cards');
+  el.innerHTML = '';
+  G.dealerCards.forEach(function(){
+    var wrap = document.createElement('div');
+    wrap.className = 'card card-back-static show';
+    wrap.textContent = '?';
+    el.appendChild(wrap);
+  });
+  document.getElementById('dealer-total').innerHTML = '&nbsp;';
+}
 
-renderScene(bcContainer, 3, 'The deal', 'Both hands get two cards, dealt face down. You flip each one yourself to see what\'s underneath.',
-  '<div style="display:flex;gap:28px;">'+
-    '<div><div class="hand-label">Banker</div><div class="hand-row">'+faceDownCard('anim-deal')+faceDownCard('anim-deal')+'</div></div>'+
-    '<div><div class="hand-label">Player</div><div class="hand-row">'+faceDownCard('anim-deal')+faceDownCard('anim-deal')+'</div></div>'+
-  '</div>');
+/* ============ PLAYER HAND ARRANGEMENT ============ */
+function renderPlayerCards(){
+  var el = document.getElementById('player-cards');
+  el.innerHTML = '';
+  G.playerCards.forEach(function(card){
+    var isPicked = G.pickedLow.indexOf(card) !== -1;
+    var wrap = makeFaceUpCard(card, isPicked ? 'picked-low' : '');
+    wrap.addEventListener('click', function(){ toggleLowPick(card); });
+    el.appendChild(wrap);
+  });
+}
+function toggleLowPick(card){
+  if(G.phase!=='arranging') return;
+  var idx = G.pickedLow.indexOf(card);
+  if(idx !== -1){
+    G.pickedLow.splice(idx, 1);
+  } else {
+    if(G.pickedLow.length >= 2) return; // already have 2 picked; ignore further picks until one is deselected
+    G.pickedLow.push(card);
+  }
+  sfxFlip();
+  renderPlayerCards();
+  renderArrangementFeedback();
+  renderActionRow();
+}
+function currentSplitCards(){
+  var low = G.pickedLow.slice();
+  var high = G.playerCards.filter(function(c){ return low.indexOf(c)===-1; });
+  return { high: high, low: low };
+}
+function renderArrangementFeedback(){
+  var highTotalEl = document.getElementById('player-high-total');
+  var lowTotalEl = document.getElementById('player-low-total');
+  var foulEl = document.getElementById('foul-banner');
+  if(G.pickedLow.length < 2){
+    highTotalEl.innerHTML = '&nbsp;';
+    lowTotalEl.textContent = 'Pick '+(2-G.pickedLow.length)+' more card'+(2-G.pickedLow.length===1?'':'s')+' for your Low Hand';
+    lowTotalEl.className = 'hand-total';
+    foulEl.classList.remove('show');
+    return;
+  }
+  var split = currentSplitCards();
+  var highEval = evalHigh(split.high);
+  var lowEval = evalLow(split.low);
+  var fouled = isFoul(highEval, lowEval);
+  highTotalEl.textContent = 'High Hand: ' + highEval.label;
+  highTotalEl.className = 'hand-total' + (fouled ? ' foul' : '');
+  lowTotalEl.textContent = 'Low Hand: ' + lowEval.label;
+  lowTotalEl.className = 'hand-total' + (fouled ? ' foul' : '');
+  foulEl.classList.toggle('show', fouled);
+}
+function canConfirmHand(){
+  if(G.pickedLow.length !== 2) return false;
+  var split = currentSplitCards();
+  var highEval = evalHigh(split.high);
+  var lowEval = evalLow(split.low);
+  return !isFoul(highEval, lowEval);
+}
+function autoSetHouseWay(){
+  if(G.phase!=='arranging') return;
+  var set = setHouseWay(G.playerCards);
+  G.pickedLow = set.low.slice();
+  renderPlayerCards();
+  renderArrangementFeedback();
+  renderActionRow();
+}
 
-renderScene(bcContainer, 4, 'Totals wrap at 9', 'Add the two cards together and only the last digit counts. A 7 and an 8 make 15 &mdash; which reads as 5.',
-  '<div style="text-align:center;"><div class="hand-row">'+cardHTML('7','♠','anim-deal')+cardHTML('8','♥','anim-deal')+'</div><div class="hand-total anim-fade" style="color:var(--text-muted);text-decoration:line-through;font-size:16px;">15</div><div class="hand-total win anim-fade" style="margin-top:-6px;">reads as 5</div></div>');
+/* ============ SET-HAND DISPLAY (shared by player post-confirm and dealer post-reveal) ============ */
+function renderSetHandStatic(containerId, totalId, highCards, lowCards, highEval, lowEval){
+  var el = document.getElementById(containerId);
+  el.innerHTML = '';
+  var highSorted = sortCardsForDisplay(highCards, highEval);
+  highCards.length = 0; Array.prototype.push.apply(highCards, highSorted.sorted); // keep the caller's array in sync with display order
+  highSorted.sorted.forEach(function(c){
+    var isValue = highSorted.valueCards.indexOf(c) !== -1;
+    el.appendChild(makeStaticFaceUpCard(c, isValue ? 'card-value-highlight' : ''));
+  });
+  var spacer = document.createElement('div');
+  spacer.style.width = '14px';
+  el.appendChild(spacer);
+  var lowSorted = sortCardsForDisplay(lowCards, lowEval);
+  lowCards.length = 0; Array.prototype.push.apply(lowCards, lowSorted.sorted);
+  lowSorted.sorted.forEach(function(c){
+    var isValue = lowSorted.valueCards.indexOf(c) !== -1;
+    el.appendChild(makeStaticFaceUpCard(c, isValue ? 'card-value-highlight' : ''));
+  });
+  document.getElementById(totalId).innerHTML = 'High: <b>'+highEval.label+'</b> &nbsp;|&nbsp; Low: <b>'+lowEval.label+'</b>';
+}
+function cardKey(card){ return card.joker ? 'JOKER' : card.rank+card.suit; }
 
-renderScene(bcContainer, 5, 'Natural', 'An 8 or 9 on the first two cards is a natural. The hand ends immediately &mdash; nobody draws a third card, no matter what.',
-  '<div style="text-align:center;"><div class="hand-label">Player</div><div class="hand-row anim-ring">'+cardHTML('4','♠')+cardHTML('5','♥')+'</div><div class="hand-total win anim-fade">9</div><span class="win-tag good anim-fade">Natural</span></div>');
+/* ============ VALUE-CARD HIGHLIGHTING ============
+   Identifies which cards form the "value" part of a hand (the pair, trips, quads, or the whole
+   hand for a full house/flush/straight/five aces), so they can be sorted to the front and given
+   a glow -- similar to Ultimate Texas Hold'em's card relevance highlighting. Correctly accounts
+   for the joker filling a gap in a group (e.g. one natural King + the joker = a pair of Kings). */
+function identifyValueCards(cards, evalResult){
+  var natural = cards.filter(function(cd){ return !cd.joker; });
+  var jokerCard = cards.filter(function(cd){ return cd.joker; })[0];
+  var jokerAvailable = !!jokerCard;
+  function takeGroup(rank, neededCount){
+    var matches = natural.filter(function(cd){ return RANK_VAL[cd.rank]===rank; });
+    if(matches.length < neededCount && jokerAvailable){
+      matches = matches.concat([jokerCard]);
+      jokerAvailable = false; // the joker can only fill one gap
+    }
+    return matches;
+  }
+  var cat = evalResult.category;
+  if(cat===CATEGORY.PAIR) return takeGroup(evalResult.ranks[0], 2);
+  if(cat===CATEGORY.TWO_PAIR) return takeGroup(evalResult.ranks[0], 2).concat(takeGroup(evalResult.ranks[1], 2));
+  if(cat===CATEGORY.TRIPS) return takeGroup(evalResult.ranks[0], 3);
+  if(cat===CATEGORY.QUADS) return takeGroup(evalResult.ranks[0], 4);
+  if(cat===CATEGORY.FULL_HOUSE || cat===CATEGORY.FLUSH || cat===CATEGORY.STRAIGHT || cat===CATEGORY.STRAIGHT_FLUSH || cat===CATEGORY.FIVE_ACES) return cards.slice();
+  return []; // HIGH_CARD: nothing to highlight
+}
+function sortCardsForDisplay(cards, evalResult){
+  var valueCards = identifyValueCards(cards, evalResult);
+  var kickers = cards.filter(function(cd){ return valueCards.indexOf(cd)===-1; });
+  kickers.sort(function(a,b){ return (b.joker?14:RANK_VAL[b.rank]) - (a.joker?14:RANK_VAL[a.rank]); });
+  return { sorted: valueCards.concat(kickers), valueCards: valueCards };
+}
+function buildDealerFlipRowOriginalOrder(){
+  var el = document.getElementById('dealer-cards');
+  el.innerHTML = '';
+  var flipEls = [];
+  var cardToEl = {};
+  G.dealerCards.forEach(function(c){
+    var f = makeFlipCard(c);
+    flipEls.push(f);
+    cardToEl[cardKey(c)] = f;
+    el.appendChild(f);
+  });
+  return { flipEls: flipEls, cardToEl: cardToEl };
+}
+function rearrangeDealerIntoSplit(cardToEl, onDone){
+  var el = document.getElementById('dealer-cards');
+  var allEls = [].slice.call(el.children);
+  allEls.forEach(function(f){ f.classList.remove('show'); });
+  var fadeOutMs = G.turbo ? 60 : 280;
+  setTimeout(function(){
+    el.innerHTML = '';
+    var highSorted = sortCardsForDisplay(G.dealerHighCards, G.dealerHighEval);
+    G.dealerHighCards = highSorted.sorted;
+    highSorted.sorted.forEach(function(c){
+      var cardEl = cardToEl[cardKey(c)];
+      if(highSorted.valueCards.indexOf(c) !== -1) cardEl.classList.add('card-value-highlight');
+      el.appendChild(cardEl);
+    });
+    var spacer = document.createElement('div');
+    spacer.style.width = '18px';
+    spacer.style.flexShrink = '0';
+    el.appendChild(spacer);
+    var lowSorted = sortCardsForDisplay(G.dealerLowCards, G.dealerLowEval);
+    G.dealerLowCards = lowSorted.sorted;
+    lowSorted.sorted.forEach(function(c){
+      var cardEl = cardToEl[cardKey(c)];
+      if(lowSorted.valueCards.indexOf(c) !== -1) cardEl.classList.add('card-value-highlight');
+      el.appendChild(cardEl);
+    });
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        [].slice.call(el.children).forEach(function(child){ if(child._card) child.classList.add('show'); });
+      });
+    });
+    setTimeout(onDone, G.turbo?100:380);
+  }, fadeOutMs);
+}
 
-renderScene(bcContainer, 6, 'The third card', 'Player\'s total decides first &mdash; 0 to 5 always draws. Banker\'s decision can depend on exactly what Player just drew, so Banker\'s card always waits until Player\'s is revealed.',
-  '<div style="display:flex;gap:28px;">'+
-    '<div><div class="hand-label">Player</div><div class="hand-row">'+cardHTML('2','♠')+cardHTML('A','♥')+cardHTML('6','♦','anim-flip')+'</div><div class="hand-total anim-fade">9</div></div>'+
-    '<div><div class="hand-label">Banker</div><div class="hand-row">'+cardHTML('4','♣')+cardHTML('K','♠')+cardHTML('3','♥','anim-deal')+'</div><div class="hand-total anim-fade">7</div></div>'+
-  '</div>');
+/* ============ CONFIRM HAND -> DEALER REVEAL -> RESOLVE ============ */
+function revealDealerHandFirst(){
+  var dealerSet = setHouseWay(G.dealerCards);
+  G.dealerHighCards = dealerSet.high;
+  G.dealerLowCards = dealerSet.low;
+  G.dealerHighEval = dealerSet.highEval;
+  G.dealerLowEval = dealerSet.lowEval;
 
-renderScene(bcContainer, 7, 'Winner', 'Closest to 9 wins. A tie pushes every bet except a Tie bet itself &mdash; which pays out big when it actually happens.',
-  '<div style="display:flex;gap:28px;">'+
-    '<div><div class="hand-label">Banker</div><div class="hand-row">'+cardHTML('4','♦')+cardHTML('4','♣')+'</div><div class="hand-total win anim-fade">8</div><div style="text-align:center;"><span class="win-tag good anim-fade">Wins</span></div></div>'+
-    '<div><div class="hand-label">Player</div><div class="hand-row">'+cardHTML('5','♠')+cardHTML('2','♥')+'</div><div class="hand-total anim-fade">7</div></div>'+
-  '</div>');
+  document.getElementById('dealer-total').innerHTML = '<i style="color:var(--text-muted);">Revealing the dealer\'s hand\u2026</i>';
+  var built = buildDealerFlipRowOriginalOrder();
+  var flipDelay = G.turbo ? 60 : 280;
+  built.flipEls.forEach(function(f, i){
+    setTimeout(function(){ flipCardUp(f); sfxFlip(); }, i*flipDelay + (G.turbo?50:300));
+  });
+  var afterAllFlipped = built.flipEls.length*flipDelay + (G.turbo?150:1000);
+  setTimeout(function(){
+    document.getElementById('dealer-total').innerHTML = '<i style="color:var(--text-muted);">Setting the dealer\'s hand\u2026</i>';
+    setTimeout(function(){
+      rearrangeDealerIntoSplit(built.cardToEl, function(){
+        var dealerBest7 = bestFiveOfSeven(G.dealerCards);
+        G.dealerIsAceHigh = isAceHighPaiGow(dealerBest7);
+        var resultHtml = 'Dealer sets \u2014 High: <b>'+G.dealerHighEval.label+'</b> &nbsp;|&nbsp; Low: <b>'+G.dealerLowEval.label+'</b>';
+        if(G.dealerIsAceHigh){
+          resultHtml += ' <span style="color:var(--brass-bright);font-weight:700;">\u2014 Ace-High Pai Gow! Your Ante pushes.</span>';
+        }
+        document.getElementById('dealer-total').innerHTML = resultHtml;
+        setTimeout(function(){
+          if(G.dealerIsAceHigh){
+            resolveAceHighPush();
+          } else {
+            G.phase = 'arranging';
+            document.getElementById('player-low-total').innerHTML = '&nbsp;';
+            renderArrangementFeedback();
+            renderActionRow();
+          }
+        }, G.turbo?80:900);
+      });
+    }, G.turbo?50:500);
+  }, afterAllFlipped);
+}
 
-var pgContainer = document.getElementById('paigow-scenes');
+/* ============ CONFIRM HAND -> RESOLVE ============ */
+function confirmHand(){
+  if(G.phase!=='arranging') return;
+  if(G.actionLocked) return;
+  if(!canConfirmHand()) return;
+  G.actionLocked = true;
+  var split = currentSplitCards();
+  G.playerHighCards = split.high;
+  G.playerLowCards = split.low;
+  G.playerHighEval = evalHigh(split.high);
+  G.playerLowEval = evalLow(split.low);
+  G.phase = 'revealing';
+  renderActionRow();
+  renderSetHandStatic('player-cards', 'player-high-total', G.playerHighCards, G.playerLowCards, G.playerHighEval, G.playerLowEval);
+  document.getElementById('player-low-total').innerHTML = '&nbsp;';
+  document.getElementById('foul-banner').classList.remove('show');
+  setTimeout(resolveHand, G.turbo?100:700);
+}
 
-renderScene(pgContainer, 1, 'The goal', 'You\'re dealt seven cards. Split them into a five-card hand and a two-card hand. Both of your hands have to beat both of the dealer\'s hands to win.',
-  '<div style="text-align:center;"><div class="hand-label">Your seven cards, split in two</div><div class="hand-row" style="justify-content:center;">'+
-    cardHTML('K','♠','anim-deal')+cardHTML('K','♥','anim-deal')+cardHTML('9','♦','anim-deal')+cardHTML('6','♣','anim-deal')+cardHTML('2','♠','anim-deal')+
-    '<div style="width:16px;"></div>'+
-    cardHTML('Q','♥','anim-deal')+cardHTML('7','♦','anim-deal')+
-  '</div><div class="hand-total anim-fade" style="font-size:14px;">High: Pair of Kings &nbsp;|&nbsp; Low: Queen-7</div></div>');
+function settleSideBets(){
+  var lines = [];
+  var result = { fortune: null, aceHigh: null };
+  if(G.bets.fortune>0){
+    var fr = fortuneBonusResult(G.playerCards, G.bets.fortune);
+    if(fr.win){ G.bankroll += G.bets.fortune + fr.payout; lines.push('Fortune Bonus: '+fr.bestHand.label+' \u2014 won '+signedMoney(fr.payout)+' ('+fr.multiplier+':1)'); }
+    else { lines.push('Fortune Bonus: '+fr.bestHand.label+' \u2014 lost '+formatMoney(G.bets.fortune)); }
+    G.stats.fortuneNet = (G.stats.fortuneNet||0) + (fr.win ? fr.payout : -G.bets.fortune);
+    result.fortune = { win: fr.win, amount: fr.win ? fr.payout : -G.bets.fortune, handLabel: fr.bestHand.label };
+  }
+  if(G.bets.aceHigh>0){
+    var dealerBest7 = bestFiveOfSeven(G.dealerCards);
+    var playerBest7 = bestFiveOfSeven(G.playerCards);
+    var ar = aceHighBonusResult(dealerBest7, G.dealerCards, playerBest7, G.bets.aceHigh);
+    if(ar.win){ G.bankroll += G.bets.aceHigh + ar.payout; lines.push('Ace-High Bonus: won '+signedMoney(ar.payout)+' ('+ar.multiplier+':1)'); }
+    else { lines.push('Ace-High Bonus: lost '+formatMoney(G.bets.aceHigh)); }
+    G.stats.aceHighNet = (G.stats.aceHighNet||0) + (ar.win ? ar.payout : -G.bets.aceHigh);
+    result.aceHigh = { win: ar.win, amount: ar.win ? ar.payout : -G.bets.aceHigh };
+  }
+  var el = document.getElementById('side-bets-result');
+  if(lines.length){ el.innerHTML = lines.join('<br>'); el.classList.add('show'); }
+  else { el.classList.remove('show'); }
+  return result;
+}
 
-renderScene(pgContainer, 2, 'Your high hand must be the stronger one', 'The five-card hand always has to outrank the two-card hand. Stack your best cards into the two-card hand and you foul &mdash; an automatic loss, no matter how good those cards were.',
-  '<div style="text-align:center;"><div class="hand-row" style="justify-content:center;">'+
-    cardHTML('5','♠')+cardHTML('5','♥')+cardHTML('2','♦')+cardHTML('3','♣')+cardHTML('4','♠')+
-    '<div style="width:16px;"></div>'+
-    cardHTML('K','♥','anim-ring')+cardHTML('K','♦','anim-ring')+
-  '</div><div class="hand-total anim-fade" style="font-size:14px;">High: Pair of 5s &nbsp;|&nbsp; Low: Pair of Kings</div><span class="win-tag bad anim-fade">Fouls &mdash; automatic loss</span></div>');
+function resolveAceHighPush(){
+  G.result = 'push'; // the Ante always pushes on a dealer Ace-High Pai Gow, regardless of the player's cards
+  G.bankroll += G.bets.ante;
+  renderBankroll();
+  // Auto-set the player's hand for display purposes only -- Fortune Bonus judges the raw 7 cards
+  // either way, but showing a sensible high/low split is clearer than leaving the row as-is.
+  var autoSet = setHouseWay(G.playerCards);
+  G.playerHighCards = autoSet.high; G.playerLowCards = autoSet.low;
+  G.playerHighEval = autoSet.highEval; G.playerLowEval = autoSet.lowEval;
+  renderSetHandStatic('player-cards', 'player-high-total', G.playerHighCards, G.playerLowCards, G.playerHighEval, G.playerLowEval);
+  document.getElementById('player-low-total').innerHTML = '&nbsp;';
 
-renderScene(pgContainer, 3, 'The joker is almost wild', 'One joker rides along with the standard deck. It can play as an ace, or complete a straight or a flush &mdash; that\'s the full extent of its power. It can never just "become" a matching card to build a pair.',
-  '<div style="display:flex;gap:14px;">'+
-    '<div style="text-align:center;">'+jokerCardHTML('anim-deal')+'<div class="hand-total anim-fade" style="font-size:12.5px;">Plays as an Ace</div></div>'+
-    '<div style="text-align:center;">'+jokerCardHTML('anim-deal')+'<div class="hand-total anim-fade" style="font-size:12.5px;">...or completes a straight</div></div>'+
-    '<div style="text-align:center;">'+jokerCardHTML('anim-deal')+'<div class="hand-total anim-fade" style="font-size:12.5px;">...or a flush</div></div>'+
-  '</div>');
+  var badge = document.getElementById('outcome-badge');
+  badge.className = 'outcome-badge push';
+  badge.textContent = 'Push \u2014 dealer Ace-High Pai Gow';
+  sfxPush();
 
-renderScene(pgContainer, 4, 'The dealer sets their hand first', 'This is Face-Up Pai Gow: the dealer\'s seven cards are dealt face up and split by a fixed set of rules before you touch your own hand. You get to see exactly what you\'re up against while you decide.',
-  '<div style="text-align:center;"><div class="hand-label">Dealer</div><div class="hand-row" style="justify-content:center;">'+
-    cardHTML('9','♠','anim-flip')+cardHTML('K','♦','anim-flip')+cardHTML('J','♥','anim-flip')+cardHTML('7','♣','anim-flip')+cardHTML('4','♠','anim-flip')+
-    '<div style="width:16px;"></div>'+
-    cardHTML('3','♦','anim-flip')+cardHTML('2','♥','anim-flip')+
-  '</div><div class="hand-total anim-fade" style="font-size:14px;">Dealer sets &mdash; High: King high &nbsp;|&nbsp; Low: 3-2 high</div></div>');
+  var why = document.getElementById('why-panel');
+  why.innerHTML = '<span class="label">Why</span>The best hand the dealer could make was Ace-high with no pair anywhere \u2014 an "Ace-High Pai Gow." In Face-Up Pai Gow, this forces an automatic push on your Ante no matter what you were dealt.';
+  why.classList.add('show');
 
-renderScene(pgContainer, 5, 'Setting your own hand', 'Pick two cards for your low hand; the other five become your high hand automatically. Keep a pair together when you can &mdash; it\'s almost always stronger than breaking it up.',
-  '<div style="text-align:center;"><div class="hand-row" style="justify-content:center;">'+
-    cardHTML('Q','♠','anim-deal value-highlight')+cardHTML('Q','♥','anim-deal value-highlight')+cardHTML('9','♦','anim-deal')+cardHTML('6','♣','anim-deal')+cardHTML('4','♠','anim-deal')+
-    '<div style="width:16px;"></div>'+
-    cardHTML('A','♥','anim-deal')+cardHTML('J','♦','anim-deal')+
-  '</div><div class="hand-total anim-fade" style="font-size:14px;">High: Pair of Queens &nbsp;|&nbsp; Low: Ace-Jack</div></div>');
+  var sideBetResults = settleSideBets();
+  saveSharedBankroll();
 
-renderScene(pgContainer, 6, 'Win both, lose both, or push', 'Beat both of the dealer\'s hands and you win the bet outright. Win one and lose the other and it\'s a push &mdash; your bet just comes back. Lose or tie both hands and you lose.',
-  '<div style="text-align:center;">'+
-    '<div style="display:flex;gap:28px;justify-content:center;">'+
-      '<div><div class="hand-label">Your High</div><div class="hand-row">'+cardHTML('A','♠')+cardHTML('A','♥')+'</div><div class="hand-total win anim-fade" style="font-size:14px;">Wins</div></div>'+
-      '<div><div class="hand-label">Your Low</div><div class="hand-row">'+cardHTML('4','♦')+cardHTML('2','♣')+'</div><div class="hand-total anim-fade" style="font-size:14px;color:var(--coral);">Loses</div></div>'+
-    '</div>'+
-    '<span class="win-tag anim-fade" style="background:rgba(91,141,224,0.15);color:var(--dusty-blue);border:1px solid rgba(91,141,224,0.3);margin-top:10px;">Push</span>'+
-  '</div>');
+  G.stats.hands++;
+  G.stats.pushes++;
+  renderStats();
+  pushHistory(0, sideBetResults);
+  renderHistory();
 
-renderScene(pgContainer, 7, 'When the dealer can\'t even make a pair', 'If the dealer\'s best possible hand is just an ace on top with no pair anywhere in the seven cards, that\'s an "Ace-High Pai Gow." Your whole bet pushes automatically, no matter what you were dealt.',
-  '<div style="text-align:center;"><div class="hand-label">Dealer\'s best five</div><div class="hand-row">'+cardHTML('A','♠')+cardHTML('K','♥')+cardHTML('J','♦')+cardHTML('9','♣')+cardHTML('6','♠')+'</div><div class="hand-total anim-fade" style="font-size:14px;">Ace high, no pair</div><span class="win-tag anim-fade" style="background:rgba(91,141,224,0.15);color:var(--dusty-blue);border:1px solid rgba(91,141,224,0.3);">Automatic push</span></div>');
+  G.phase = 'resolved';
+  G.actionLocked = false;
+  renderActionRow();
+}
 
-renderScene(pgContainer, 8, 'No commission on wins', 'Some Pai Gow tables take a 5% cut out of every win. This one doesn\'t &mdash; bet $100, win, and the full $100 is yours.',
-  '<div style="text-align:center;">'+betChip('Ante','$100','anim-deal')+'<div class="hand-total win anim-fade" style="margin-top:14px;">+$100 &mdash; no cut taken</div></div>');
+function resolveHand(){
+  G.result = resolveOutcome(G.playerHighEval, G.playerLowEval, G.dealerHighEval, G.dealerLowEval);
+  var betAmt = G.bets.ante;
+  var netChange = 0;
+  if(G.result==='win'){
+    // Face-Up Pai Gow is commission-free -- straight even money, no 5% cut.
+    netChange = betAmt;
+    G.bankroll += betAmt + netChange;
+  } else if(G.result==='push'){
+    G.bankroll += betAmt;
+    netChange = 0;
+  } else {
+    netChange = -betAmt;
+  }
+  renderBankroll();
 
-renderScene(pgContainer, 9, 'Two optional bonus bets', 'Fortune Bonus pays out on your own seven cards alone, win or lose against the dealer. Ace-High Bonus pays when the dealer gets forced into that automatic-push hand.',
-  '<div style="display:flex;gap:16px;">'+betChip('Fortune','$10','anim-deal')+betChip('Ace-High','$10','anim-deal')+'</div>');
+  var badge = document.getElementById('outcome-badge');
+  if(G.result==='win'){ badge.className='outcome-badge win'; badge.textContent = 'You win '+signedMoney(netChange); sfxWin(); }
+  else if(G.result==='push'){ badge.className='outcome-badge push'; badge.textContent = 'Push'; sfxPush(); }
+  else { badge.className='outcome-badge loss'; badge.textContent = 'You lose '+formatMoney(betAmt); sfxLose(); }
 
-var uthContainer = document.getElementById('uth-scenes');
+  renderWhyPanel();
+  renderHouseWayNote();
+  var sideBetResults = settleSideBets();
+  saveSharedBankroll();
 
-renderScene(uthContainer, 1, 'The goal', 'You and the dealer each get two cards. Five community cards are shared between you both. Build the best five-card hand you can &mdash; any mix of your own cards and the board &mdash; and beat the dealer.',
-  '<div style="display:flex;gap:28px;">'+
-    '<div><div class="hand-label">You</div><div class="hand-row anim-ring">'+cardHTML('K','♠')+cardHTML('K','♥')+'</div><div class="hand-total win anim-fade">Pair of Kings</div><div style="text-align:center;"><span class="win-tag good anim-fade">You win</span></div></div>'+
-    '<div><div class="hand-label">Dealer</div><div class="hand-row">'+cardHTML('Q','♦')+cardHTML('7','♣')+'</div><div class="hand-total anim-fade">Queen high</div></div>'+
-  '</div>');
+  G.stats.hands++;
+  if(G.result==='win') G.stats.wins++;
+  else if(G.result==='push') G.stats.pushes++;
+  else G.stats.losses++;
+  G.stats.net += netChange;
+  renderStats();
+  pushHistory(netChange, sideBetResults);
+  renderHistory();
 
-renderScene(uthContainer, 2, 'Four bets, one hand', 'Ante and Blind are mandatory, and they always move together &mdash; bet one and the other matches automatically. Trips is a completely optional side bet. Play is the extra bet you add as the hand unfolds.',
-  '<div style="display:flex;gap:16px;">'+betChip('Ante','$25','anim-deal')+betChip('Blind','$25','anim-deal')+betChip('Play','?','anim-deal')+betChip('Trips','$25','anim-deal')+'</div>');
+  G.phase = 'resolved';
+  G.actionLocked = false;
+  renderActionRow();
+}
 
-renderScene(uthContainer, 3, 'The deal', 'Your two cards come face up &mdash; you see exactly what you\'re holding. The dealer\'s two stay face down until the very end, no matter how the hand plays out.',
-  '<div style="display:flex;gap:28px;">'+
-    '<div><div class="hand-label">You</div><div class="hand-row">'+cardHTML('A','♠','anim-deal')+cardHTML('K','♥','anim-deal')+'</div></div>'+
-    '<div><div class="hand-label">Dealer</div><div class="hand-row">'+faceDownCard('anim-deal')+faceDownCard('anim-deal')+'</div></div>'+
-  '</div>');
+function renderWhyPanel(){
+  var el = document.getElementById('why-panel');
+  var highCmp = compareHigh(G.playerHighEval, G.dealerHighEval);
+  var lowCmp = compareLow(G.playerLowEval, G.dealerLowEval);
+  var highWord = highCmp>0 ? 'won' : (highCmp<0 ? 'lost' : 'tied (dealer wins ties)');
+  var lowWord = lowCmp>0 ? 'won' : (lowCmp<0 ? 'lost' : 'tied (dealer wins ties)');
+  el.innerHTML = '<span class="label">Why</span>'+
+    'Your High Hand ('+G.playerHighEval.label+') vs the dealer\'s ('+G.dealerHighEval.label+') \u2014 you '+highWord+'. '+
+    'Your Low Hand ('+G.playerLowEval.label+') vs the dealer\'s ('+G.dealerLowEval.label+') \u2014 you '+lowWord+'. '+
+    (G.result==='win' ? 'Winning both hands wins the bet, paid at 1:1 minus the standard 5% commission.' :
+     G.result==='push' ? 'Winning one hand and not the other pushes \u2014 your bet is returned.' :
+     'Losing or tying both hands loses the bet.');
+  el.classList.add('show');
+}
+function renderHouseWayNote(){
+  var el = document.getElementById('house-way-note');
+  if(!G.showHouseWayCompare){ el.classList.remove('show'); return; }
+  var houseSet = setHouseWay(G.playerCards);
+  var matchesHigh = compareHigh(houseSet.highEval, G.playerHighEval)===0;
+  var matchesLow = compareLow(houseSet.lowEval, G.playerLowEval)===0;
+  G.matchedHouseWay = matchesHigh && matchesLow;
+  if(G.matchedHouseWay){
+    el.innerHTML = '<span class="label">House way comparison</span>Your split matches the simplified house way for this hand.';
+  } else {
+    el.innerHTML = '<span class="label">House way comparison</span>The simplified house way would have set High: '+houseSet.highEval.label+' / Low: '+houseSet.lowEval.label+' here. This is a simplified reference, not full optimal strategy \u2014 differing from it doesn\'t necessarily mean your split was wrong.';
+  }
+  el.classList.add('show');
+}
 
-renderScene(uthContainer, 4, 'Decision one: before the flop', 'With just your two hole cards and nothing else revealed, you can bet 4x your Ante right away &mdash; or check and see more of the board for free. Only the strongest starting hands are worth betting this early.',
-  '<div style="text-align:center;"><div class="hand-label">You</div><div class="hand-row">'+cardHTML('A','♠')+cardHTML('K','♥')+'</div><div style="margin-top:12px;">'+decisionBtn('Check')+decisionBtn('Bet 4x', true, 'anim-fade')+'</div></div>');
-
-renderScene(uthContainer, 5, 'The flop', 'If you checked, three community cards appear. Now you can bet 2x your Ante &mdash; or check again and wait for the rest of the board.',
-  '<div style="text-align:center;"><div class="hand-label">Board</div><div class="hand-row">'+cardHTML('9','♠','anim-deal')+cardHTML('5','♥','anim-deal')+cardHTML('2','♦','anim-deal')+'</div><div style="margin-top:12px;">'+decisionBtn('Check')+decisionBtn('Bet 2x', true, 'anim-fade')+'</div></div>');
-
-renderScene(uthContainer, 6, 'The river \u2014 your last chance', 'The final two community cards land, so all five are showing. This is the last decision point: bet exactly 1x your Ante, or fold and give up your Ante and Blind for nothing.',
-  '<div style="text-align:center;"><div class="hand-label">Board</div><div class="hand-row">'+cardHTML('9','♠')+cardHTML('5','♥')+cardHTML('2','♦')+cardHTML('J','♣','anim-deal')+cardHTML('4','♠','anim-deal')+'</div><div style="margin-top:12px;">'+decisionBtn('Fold')+decisionBtn('Bet 1x', true, 'anim-fade')+'</div></div>');
-
-renderScene(uthContainer, 7, 'The dealer has to qualify', 'Once you\'ve bet, the dealer\'s cards flip. They need at least a pair to "qualify." If they don\'t, your Ante is protected \u2014 it pushes no matter what, even if the dealer\'s hand would have otherwise beaten you.',
-  '<div style="text-align:center;"><div class="hand-label">Dealer</div><div class="hand-row">'+cardHTML('K','♦','anim-flip')+cardHTML('4','♣','anim-flip')+'</div><div class="hand-total anim-fade">King high</div>'+qualifyTag(false)+'<div style="font-size:11.5px;color:var(--text-muted);margin-top:8px;" class="anim-fade">Your Ante pushes</div></div>');
-
-renderScene(uthContainer, 8, 'Showdown', 'Both hands compare using the best five cards each of you can make from your own two cards plus the shared board. The higher hand wins the Ante, Blind, and Play bets together.',
-  '<div style="display:flex;gap:28px;">'+
-    '<div><div class="hand-label">You</div><div class="hand-row">'+cardHTML('A','♠')+cardHTML('K','♥')+'</div><div class="hand-total win anim-fade">Pair of Aces</div><div style="text-align:center;"><span class="win-tag good anim-fade">You win</span></div></div>'+
-    '<div><div class="hand-label">Dealer</div><div class="hand-row">'+cardHTML('Q','♦','anim-flip')+cardHTML('7','♣','anim-flip')+'</div><div class="hand-total anim-fade">Queen high</div></div>'+
-  '</div>');
-
-renderScene(uthContainer, 9, 'The Blind bet', 'Blind only pays extra if your final hand is a straight or better \u2014 and only if you win. Anything less than a straight, and Blind simply pushes, win or lose.',
-  '<div style="text-align:center;"><div class="hand-label">You</div><div class="hand-row anim-ring">'+cardHTML('5','♠')+cardHTML('6','♥')+cardHTML('7','♦')+cardHTML('8','♣')+cardHTML('9','♠')+'</div><div class="hand-total win anim-fade">Straight</div><span class="win-tag good anim-fade">Blind pays 1:1</span></div>');
-
-renderScene(uthContainer, 10, 'The Trips bet', 'Trips is judged entirely on its own \u2014 it only cares about your final hand, three of a kind or better, whether or not you beat the dealer at all. Miss it, and Trips loses on its own too.',
-  '<div style="text-align:center;"><div class="hand-label">You</div><div class="hand-row anim-ring">'+cardHTML('8','♠')+cardHTML('8','♥')+cardHTML('8','♦')+cardHTML('K','♣')+cardHTML('3','♦')+'</div><div class="hand-total win anim-fade">Three of a Kind</div><span class="win-tag good anim-fade">Trips pays 3:1</span></div>');
-
-function buildProgressRail(game){
-  var rail = document.getElementById('progress-rail');
-  var scenes = document.getElementById(game+'-scenes').children;
-  rail.innerHTML = '';
-  for(var i=0;i<scenes.length;i++){
-    var dot = document.createElement('div');
-    dot.className = 'progress-dot';
-    rail.appendChild(dot);
+/* ============ ACTION ROW ============ */
+function renderActionRow(){
+  var el = document.getElementById('action-row');
+  el.innerHTML = '';
+  function mkBtn(label, fn, primary, disabled){
+    var b = document.createElement('button');
+    if(primary) b.className = 'primary';
+    b.textContent = label;
+    b.disabled = !!disabled;
+    b.addEventListener('click', fn);
+    return b;
+  }
+  if(G.phase==='betting'){
+    document.getElementById('bet-row').style.display = '';
+    var totalBet = G.bets.ante + (G.bets.fortune||0) + (G.bets.aceHigh||0);
+    var canDeal = G.bets.ante>0 && totalBet<=G.bankroll;
+    el.appendChild(mkBtn('Deal', dealHand, true, !canDeal));
+  } else if(G.phase==='arranging'){
+    el.appendChild(mkBtn('Auto-Set (House Way)', autoSetHouseWay, false));
+    el.appendChild(mkBtn('Confirm Hand', confirmHand, true, !canConfirmHand()));
+  } else if(G.phase==='resolved'){
+    el.appendChild(mkBtn('Deal Again', playAgain, true));
   }
 }
-function updateActiveDot(index){
-  var rail = document.getElementById('progress-rail');
-  Array.prototype.forEach.call(rail.children, function(d, i){
-    d.classList.toggle('active', i===index);
-  });
+function playAgain(){
+  G.phase = 'betting';
+  G.pickedLow = [];
+  G.playerHighEval = null; G.playerLowEval = null; G.playerHighCards = null; G.playerLowCards = null;
+  G.dealerHighEval = null; G.dealerLowEval = null; G.dealerHighCards = null; G.dealerLowCards = null;
+  G.result = null; G.matchedHouseWay = null;
+  clearBets();
+  document.getElementById('player-cards').innerHTML = '';
+  document.getElementById('dealer-cards').innerHTML = '';
+  document.getElementById('player-high-total').innerHTML = '&nbsp;';
+  document.getElementById('player-low-total').innerHTML = '&nbsp;';
+  document.getElementById('dealer-total').innerHTML = '&nbsp;';
+  renderActionRow();
 }
 
-function switchGame(game){
-  if(game===currentGame) return;
-  var oldPanel = document.getElementById('panel-'+currentGame);
-  var newPanel = document.getElementById('panel-'+game);
-  document.querySelectorAll('.switch-btn').forEach(function(b){ b.classList.remove('active'); });
-  document.getElementById('switch-'+game).classList.add('active');
-  oldPanel.classList.remove('fade-in');
-  setTimeout(function(){
-    oldPanel.classList.remove('active');
-    newPanel.classList.add('active');
-    currentGame = game;
-    buildProgressRail(game);
-    requestAnimationFrame(function(){ newPanel.classList.add('fade-in'); });
-  }, 260);
+/* ============ STATS & HISTORY ============ */
+function renderStats(){
+  var el = document.getElementById('stats-grid');
+  var s = G.stats;
+  var winPct = s.hands ? Math.round((s.wins/s.hands)*1000)/10 : 0;
+  var html =
+    '<div class="stat"><div class="v">'+s.hands+'</div><div class="k">Hands</div></div>'+
+    '<div class="stat"><div class="v">'+s.wins+'</div><div class="k">Wins</div></div>'+
+    '<div class="stat"><div class="v">'+s.pushes+'</div><div class="k">Pushes</div></div>'+
+    '<div class="stat"><div class="v">'+s.losses+'</div><div class="k">Losses</div></div>'+
+    '<div class="stat"><div class="v">'+winPct+'%</div><div class="k">Win rate</div></div>'+
+    '<div class="stat"><div class="v" style="color:'+(s.net>=0?'var(--sage-bright)':'var(--coral)')+';">'+signedMoney(s.net)+'</div><div class="k">Ante net</div></div>';
+  if(typeof s.fortuneNet==='number'){
+    html += '<div class="stat"><div class="v" style="color:'+(s.fortuneNet>=0?'var(--sage-bright)':'var(--coral)')+';">'+signedMoney(s.fortuneNet)+'</div><div class="k">Fortune net</div></div>';
+  }
+  if(typeof s.aceHighNet==='number'){
+    html += '<div class="stat"><div class="v" style="color:'+(s.aceHighNet>=0?'var(--sage-bright)':'var(--coral)')+';">'+signedMoney(s.aceHighNet)+'</div><div class="k">Ace-High net</div></div>';
+  }
+  el.innerHTML = html;
 }
-document.getElementById('switch-blackjack').addEventListener('click', function(){ switchGame('blackjack'); });
-document.getElementById('switch-baccarat').addEventListener('click', function(){ switchGame('baccarat'); });
-document.getElementById('switch-paigow').addEventListener('click', function(){ switchGame('paigow'); });
-document.getElementById('switch-uth').addEventListener('click', function(){ switchGame('uth'); });
-
-var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-document.querySelectorAll('.game-hero').forEach(function(heroSection){
-  var glow = heroSection.querySelector('.hero-glow');
-  if(!glow || reducedMotion) return;
-  heroSection.addEventListener('mousemove', function(e){
-    var rect = heroSection.getBoundingClientRect();
-    var relX = (e.clientX - rect.left) / rect.width - 0.5;
-    glow.style.transform = 'translateX(calc(-50% + ' + (relX*26) + 'px))';
+function pushHistory(netChange, sideBetResults){
+  G.history.unshift({
+    result: G.result,
+    net: netChange,
+    playerHigh: G.playerHighEval.label,
+    playerLow: G.playerLowEval.label,
+    dealerHigh: G.dealerHighEval.label,
+    dealerLow: G.dealerLowEval.label,
+    bet: G.bets.ante,
+    sideBets: sideBetResults || null
   });
-  heroSection.addEventListener('mouseleave', function(){ glow.style.transform = 'translateX(-50%)'; });
+  if(G.history.length > 12) G.history.length = 12;
+}
+function renderHistory(){
+  var el = document.getElementById('history');
+  if(!G.history.length){ el.innerHTML = '<p class="foot-note" style="margin:0;">Play a hand to see it here.</p>'; return; }
+  el.innerHTML = G.history.map(function(h){
+    var resultLabel = h.result==='win' ? 'Won '+signedMoney(h.net) : (h.result==='push' ? 'Push' : 'Lost '+formatMoney(h.bet));
+    var sideBetLines = '';
+    if(h.sideBets){
+      if(h.sideBets.fortune) sideBetLines += '<br>Fortune ('+h.sideBets.fortune.handLabel+'): '+signedMoney(h.sideBets.fortune.amount);
+      if(h.sideBets.aceHigh) sideBetLines += '<br>Ace-High: '+signedMoney(h.sideBets.aceHigh.amount);
+    }
+    return '<details><summary>'+resultLabel+'</summary><div class="hist-body">'+
+      'You: '+h.playerHigh+' / '+h.playerLow+'<br>'+
+      'Dealer: '+h.dealerHigh+' / '+h.dealerLow+
+      sideBetLines+
+      '</div></details>';
+  }).join('');
+}
+
+/* ============ EVENT WIRING & INIT ============ */
+document.getElementById('btn-toggle-settings').addEventListener('click', function(){
+  var p = document.getElementById('settings-panel');
+  p.style.display = p.style.display==='none' ? '' : 'none';
+});
+document.getElementById('set-sound').addEventListener('change', function(){ G.soundOn = this.checked; });
+document.getElementById('set-sidebets').addEventListener('change', function(){
+  G.sideBetsEnabled = this.checked;
+  document.getElementById('spot-fortune').style.display = this.checked ? '' : 'none';
+  document.getElementById('spot-acehigh').style.display = this.checked ? '' : 'none';
+  document.getElementById('bonus-paytable-panel').style.display = this.checked ? '' : 'none';
+  if(!this.checked && G.phase==='betting'){
+    G.bets.fortune = 0; G.bets.aceHigh = 0;
+    renderBetCircle();
+    renderActionRow();
+  }
+});
+document.getElementById('set-showodds').addEventListener('change', function(){ G.showHouseWayCompare = this.checked; });
+document.getElementById('set-turbo').addEventListener('change', function(){ G.turbo = this.checked; });
+document.getElementById('btn-reset-bankroll-settings').addEventListener('click', function(){
+  G.bankroll = 1000;
+  renderBankroll();
+  saveSharedBankroll();
+});
+document.querySelectorAll('.chip').forEach(function(chipEl){
+  chipEl.addEventListener('click', function(){ selectChip(parseInt(chipEl.dataset.chip,10)); });
+});
+document.getElementById('spot-ante').addEventListener('click', function(){ placeBet('ante'); });
+document.getElementById('spot-ante').addEventListener('keydown', function(e){
+  if(e.key==='Enter' || e.key===' '){ e.preventDefault(); placeBet('ante'); }
+});
+document.getElementById('spot-fortune').addEventListener('click', function(){ placeBet('fortune'); });
+document.getElementById('spot-fortune').addEventListener('keydown', function(e){
+  if(e.key==='Enter' || e.key===' '){ e.preventDefault(); placeBet('fortune'); }
+});
+document.getElementById('spot-acehigh').addEventListener('click', function(){ placeBet('aceHigh'); });
+document.getElementById('spot-acehigh').addEventListener('keydown', function(e){
+  if(e.key==='Enter' || e.key===' '){ e.preventDefault(); placeBet('aceHigh'); }
 });
 
-buildProgressRail('blackjack');
+/* ============ INIT ============ */
+var sharedBalance = loadSharedBankroll();
+if(sharedBalance!==null){ G.bankroll = sharedBalance; } else { saveSharedBankroll(); }
+selectChip(25);
+renderBankroll();
+renderStats();
+renderHistory();
+renderActionRow();
+
 </script>
 </body>
 </html>
