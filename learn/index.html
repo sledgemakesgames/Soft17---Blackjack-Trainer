@@ -75,6 +75,7 @@ a{color:inherit;}
   .card-idx{font-size:13px;}
   .card-idx .pip{font-size:10px;}
   .card-pip{font-size:19px;}
+  .face-card-icon{width:24px !important;height:34px !important;}
   .scene-visual{min-height:190px;padding:18px;}
   .topbar{padding:14px 16px;}
   .game-switch{top:53px;padding:12px 16px;}
@@ -182,10 +183,46 @@ footer{text-align:center;padding:40px 24px 60px;font-size:12px;color:var(--text-
 <footer>Table Ready — free practice tables, for education only.</footer>
 
 <script>
+function faceCardSVG(rank){
+  if(rank==='J'){
+    return '<svg class="face-card-icon" viewBox="0 0 40 56" width="30" height="42" style="overflow:visible;">'+
+      '<circle cx="20" cy="10" r="5.5" fill="none" stroke="currentColor" stroke-width="2.4"/>'+
+      '<line x1="14" y1="3.5" x2="26" y2="3.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'+
+      '<line x1="20" y1="15.5" x2="20" y2="34" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'+
+      '<line x1="20" y1="20" x2="10" y2="27" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'+
+      '<line x1="20" y1="20" x2="30" y2="27" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'+
+      '<line x1="20" y1="34" x2="11" y2="51" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'+
+      '<line x1="20" y1="34" x2="29" y2="51" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'+
+    '</svg>';
+  }
+  if(rank==='Q'){
+    return '<svg class="face-card-icon" viewBox="0 0 40 56" width="30" height="42" style="overflow:visible;">'+
+      '<circle cx="20" cy="11" r="5.5" fill="none" stroke="currentColor" stroke-width="2.4"/>'+
+      '<polyline points="13,4 16,8 20,3 24,8 27,4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'+
+      '<line x1="20" y1="16.5" x2="20" y2="32" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'+
+      '<line x1="20" y1="21" x2="11" y2="28" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'+
+      '<line x1="20" y1="21" x2="29" y2="28" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'+
+      '<polygon points="20,32 9,52 31,52" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>'+
+    '</svg>';
+  }
+  return '<svg class="face-card-icon" viewBox="0 0 40 56" width="30" height="42" style="overflow:visible;">'+
+    '<circle cx="20" cy="13" r="5.5" fill="none" stroke="currentColor" stroke-width="2.4"/>'+
+    '<polyline points="12,5 15,10 20,4 25,10 28,5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'+
+    '<line x1="20" y1="1.5" x2="20" y2="4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'+
+    '<line x1="17.5" y1="2.5" x2="22.5" y2="2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'+
+    '<line x1="20" y1="18.5" x2="20" y2="36" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'+
+    '<line x1="20" y1="23" x2="10" y2="30" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'+
+    '<line x1="20" y1="23" x2="32" y2="16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'+
+    '<line x1="20" y1="36" x2="11" y2="52" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'+
+    '<line x1="20" y1="36" x2="29" y2="52" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'+
+  '</svg>';
+}
 function cardHTML(rank, suit, extraClass){
   var red = (suit==='♥'||suit==='♦');
   var isFace = (rank==='J'||rank==='Q'||rank==='K');
-  var pip = isFace ? '' : '<span class="card-pip">'+suit+'</span>';
+  var pip = isFace
+    ? '<span style="position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);">'+faceCardSVG(rank)+'</span>'
+    : '<span class="card-pip">'+suit+'</span>';
   return '<div class="card'+(red?' red':'')+(extraClass?' '+extraClass:'')+'">'+
     '<span class="card-idx"><span>'+rank+'</span><span class="pip">'+suit+'</span></span>'+
     '<span class="card-idx br"><span>'+rank+'</span><span class="pip">'+suit+'</span></span>'+
@@ -400,7 +437,7 @@ renderScene(uthContainer, 5, 'The flop', 'If you checked, three community cards 
 renderScene(uthContainer, 6, 'The river \u2014 your last chance', 'The final two community cards land, so all five are showing. This is the last decision point: bet exactly 1x your Ante, or fold and give up your Ante and Blind for nothing.',
   '<div style="text-align:center;"><div class="hand-label">Board</div><div class="hand-row">'+cardHTML('9','♠')+cardHTML('5','♥')+cardHTML('2','♦')+cardHTML('J','♣','anim-deal')+cardHTML('4','♠','anim-deal')+'</div><div style="margin-top:12px;">'+decisionBtn('Fold')+decisionBtn('Bet 1x', true, 'anim-fade')+'</div></div>');
 
-renderScene(uthContainer, 7, 'The dealer has to qualify', 'Once you\'ve bet, the dealer\'s cards flip. They need at least a pair to "qualify." If they don\'t, your Ante is paid or given back \u2014 it pushes if the dealer does not get a pair or better and pays if they do',
+renderScene(uthContainer, 7, 'The dealer has to qualify', 'Once you\'ve bet, the dealer\'s cards flip. They need at least a pair to "qualify." If they don\'t, your Ante is protected \u2014 it pushes no matter what, even if the dealer\'s hand would have otherwise beaten you.',
   '<div style="text-align:center;"><div class="hand-label">Dealer</div><div class="hand-row">'+cardHTML('K','♦','anim-flip')+cardHTML('4','♣','anim-flip')+'</div><div class="hand-total anim-fade">King high</div>'+qualifyTag(false)+'<div style="font-size:11.5px;color:var(--text-muted);margin-top:8px;" class="anim-fade">Your Ante pushes</div></div>');
 
 renderScene(uthContainer, 8, 'Showdown', 'Both hands compare using the best five cards each of you can make from your own two cards plus the shared board. The higher hand wins the Ante, Blind, and Play bets together.',
