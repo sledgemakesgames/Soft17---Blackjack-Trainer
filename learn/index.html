@@ -400,7 +400,7 @@ renderScene(uthContainer, 5, 'The flop', 'If you checked, three community cards 
 renderScene(uthContainer, 6, 'The river \u2014 your last chance', 'The final two community cards land, so all five are showing. This is the last decision point: bet exactly 1x your Ante, or fold and give up your Ante and Blind for nothing.',
   '<div style="text-align:center;"><div class="hand-label">Board</div><div class="hand-row">'+cardHTML('9','♠')+cardHTML('5','♥')+cardHTML('2','♦')+cardHTML('J','♣','anim-deal')+cardHTML('4','♠','anim-deal')+'</div><div style="margin-top:12px;">'+decisionBtn('Fold')+decisionBtn('Bet 1x', true, 'anim-fade')+'</div></div>');
 
-renderScene(uthContainer, 7, 'The dealer has to qualify', 'Once you\'ve bet, the dealer\'s cards flip. They need at least a pair to "qualify." If they don\'t, your Ante is protected \u2014 it pushes no matter what, even if the dealer\'s hand would have otherwise beaten you.',
+renderScene(uthContainer, 7, 'The dealer has to qualify', 'Once you\'ve bet, the dealer\'s cards flip. They need at least a pair to "qualify." If they don\'t, your Ante is paid or given back \u2014 it pushes if the dealer does not get a pair or better and pays if they do',
   '<div style="text-align:center;"><div class="hand-label">Dealer</div><div class="hand-row">'+cardHTML('K','♦','anim-flip')+cardHTML('4','♣','anim-flip')+'</div><div class="hand-total anim-fade">King high</div>'+qualifyTag(false)+'<div style="font-size:11.5px;color:var(--text-muted);margin-top:8px;" class="anim-fade">Your Ante pushes</div></div>');
 
 renderScene(uthContainer, 8, 'Showdown', 'Both hands compare using the best five cards each of you can make from your own two cards plus the shared board. The higher hand wins the Ante, Blind, and Play bets together.',
