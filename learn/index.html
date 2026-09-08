@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Learn to Play — Table Ready</title>
-<meta name="description" content="See how Blackjack, Baccarat, and Ultimate Texas Hold'em actually play, in short animated walkthroughs — no signup, no wall of rules text.">
+<meta name="description" content="See how Blackjack, Baccarat, Pai Gow Poker, and Ultimate Texas Hold'em actually play, in short animated walkthroughs — no signup, no wall of rules text.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" href="/favicon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Table Ready">
 <meta property="og:title" content="Learn to Play — Table Ready">
-<meta property="og:description" content="See how Blackjack, Baccarat, and Ultimate Texas Hold'em actually play, in short animated walkthroughs — no signup, no wall of rules text.">
+<meta property="og:description" content="See how Blackjack, Baccarat, Pai Gow Poker, and Ultimate Texas Hold'em actually play, in short animated walkthroughs — no signup, no wall of rules text.">
 <meta property="og:url" content="https://tableready.xyz/learn/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Learn to Play — Table Ready">
-<meta name="twitter:description" content="See how Blackjack, Baccarat, and Ultimate Texas Hold'em actually play, in short animated walkthroughs.">
+<meta name="twitter:description" content="See how Blackjack, Baccarat, Pai Gow Poker, and Ultimate Texas Hold'em actually play, in short animated walkthroughs.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -37,7 +37,7 @@ a{color:inherit;}
 .topbar .back{font-size:13px;color:var(--text-muted);text-decoration:none;}
 .topbar .back:hover{color:var(--text);}
 
-.game-switch{position:sticky;top:57px;z-index:35;display:flex;justify-content:center;gap:8px;padding:14px 20px;background:rgba(8,9,11,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.game-switch{position:sticky;top:57px;z-index:35;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:14px 20px;background:rgba(8,9,11,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
 .switch-btn{background:var(--panel);border:1px solid var(--line);color:var(--text-muted);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px;padding:9px 20px;border-radius:999px;cursor:pointer;transition:all 160ms ease;}
 .switch-btn.active{background:var(--brass);color:#1A1408;border-color:var(--brass);}
 .switch-btn:not(.active):hover{border-color:rgba(240,196,107,0.35);color:var(--text);}
@@ -86,6 +86,8 @@ a{color:inherit;}
 
 .card{width:64px;height:90px;border-radius:8px;background:var(--card-face);color:var(--ink);position:relative;font-weight:700;font-family:'Space Grotesk',sans-serif;box-shadow:0 4px 10px -4px rgba(0,0,0,0.5);flex-shrink:0;}
 .card.red{color:var(--coral);}
+.card.joker{color:var(--violet);}
+.card.value-highlight{box-shadow:0 0 0 3px var(--sage-bright),0 4px 16px -2px rgba(101,199,163,0.55);}
 .card-idx{position:absolute;top:4px;left:4px;font-size:16px;font-weight:800;line-height:1;letter-spacing:-0.3px;display:flex;flex-direction:column;align-items:center;}
 .card-idx .pip{font-size:12px;line-height:1;margin-top:1px;}
 .card-idx.br{top:auto;left:auto;bottom:4px;right:4px;transform:rotate(180deg);}
@@ -135,6 +137,7 @@ footer{text-align:center;padding:40px 24px 60px;font-size:12px;color:var(--text-
 <div class="game-switch">
   <button class="switch-btn active" id="switch-blackjack">Blackjack</button>
   <button class="switch-btn" id="switch-baccarat">Baccarat</button>
+  <button class="switch-btn" id="switch-paigow">Pai Gow Poker</button>
   <button class="switch-btn" id="switch-uth">Ultimate Texas Hold'em</button>
 </div>
 
@@ -156,6 +159,15 @@ footer{text-align:center;padding:40px 24px 60px;font-size:12px;color:var(--text-
     <p>Seven quick steps covering everything from the deal to the one rule that trips everybody up.</p>
   </section>
   <div id="baccarat-scenes"></div>
+</div>
+
+<div class="game-panel" id="panel-paigow">
+  <section class="game-hero">
+    <div class="hero-glow"></div>
+    <h1>How Pai Gow Poker works</h1>
+    <p>Nine quick steps &mdash; from splitting seven cards into two hands to the one dealer rule that pushes your bet outright.</p>
+  </section>
+  <div id="paigow-scenes"></div>
 </div>
 
 <div class="game-panel" id="panel-uth">
@@ -182,6 +194,12 @@ function cardHTML(rank, suit, extraClass){
 }
 function faceDownCard(extraClass){
   return '<div class="card'+(extraClass?' '+extraClass:'')+'" style="background:var(--panel-2);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:22px;">?</div>';
+}
+function jokerCardHTML(extraClass){
+  return '<div class="card joker'+(extraClass?' '+extraClass:'')+'" style="display:flex;flex-direction:column;align-items:center;justify-content:center;">'+
+    '<span style="font-size:9px;font-weight:800;letter-spacing:0.5px;">JOKER</span>'+
+    '<span style="font-size:22px;margin-top:3px;">&#9733;</span>'+
+    '</div>';
 }
 function betChip(label, amount, extraClass){
   return '<div class="'+(extraClass||'')+'" style="text-align:center;">'+
@@ -301,6 +319,61 @@ renderScene(bcContainer, 7, 'Winner', 'Closest to 9 wins. A tie pushes every bet
     '<div><div class="hand-label">Player</div><div class="hand-row">'+cardHTML('5','♠')+cardHTML('2','♥')+'</div><div class="hand-total anim-fade">7</div></div>'+
   '</div>');
 
+var pgContainer = document.getElementById('paigow-scenes');
+
+renderScene(pgContainer, 1, 'The goal', 'You\'re dealt seven cards. Split them into a five-card hand and a two-card hand. Both of your hands have to beat both of the dealer\'s hands to win.',
+  '<div style="text-align:center;"><div class="hand-label">Your seven cards, split in two</div><div class="hand-row" style="justify-content:center;">'+
+    cardHTML('K','♠','anim-deal')+cardHTML('K','♥','anim-deal')+cardHTML('9','♦','anim-deal')+cardHTML('6','♣','anim-deal')+cardHTML('2','♠','anim-deal')+
+    '<div style="width:16px;"></div>'+
+    cardHTML('Q','♥','anim-deal')+cardHTML('7','♦','anim-deal')+
+  '</div><div class="hand-total anim-fade" style="font-size:14px;">High: Pair of Kings &nbsp;|&nbsp; Low: Queen-7</div></div>');
+
+renderScene(pgContainer, 2, 'Your high hand must be the stronger one', 'The five-card hand always has to outrank the two-card hand. Stack your best cards into the two-card hand and you foul &mdash; an automatic loss, no matter how good those cards were.',
+  '<div style="text-align:center;"><div class="hand-row" style="justify-content:center;">'+
+    cardHTML('5','♠')+cardHTML('5','♥')+cardHTML('2','♦')+cardHTML('3','♣')+cardHTML('4','♠')+
+    '<div style="width:16px;"></div>'+
+    cardHTML('K','♥','anim-ring')+cardHTML('K','♦','anim-ring')+
+  '</div><div class="hand-total anim-fade" style="font-size:14px;">High: Pair of 5s &nbsp;|&nbsp; Low: Pair of Kings</div><span class="win-tag bad anim-fade">Fouls &mdash; automatic loss</span></div>');
+
+renderScene(pgContainer, 3, 'The joker is almost wild', 'One joker rides along with the standard deck. It can play as an ace, or complete a straight or a flush &mdash; that\'s the full extent of its power. It can never just "become" a matching card to build a pair.',
+  '<div style="display:flex;gap:14px;">'+
+    '<div style="text-align:center;">'+jokerCardHTML('anim-deal')+'<div class="hand-total anim-fade" style="font-size:12.5px;">Plays as an Ace</div></div>'+
+    '<div style="text-align:center;">'+jokerCardHTML('anim-deal')+'<div class="hand-total anim-fade" style="font-size:12.5px;">...or completes a straight</div></div>'+
+    '<div style="text-align:center;">'+jokerCardHTML('anim-deal')+'<div class="hand-total anim-fade" style="font-size:12.5px;">...or a flush</div></div>'+
+  '</div>');
+
+renderScene(pgContainer, 4, 'The dealer sets their hand first', 'This is Face-Up Pai Gow: the dealer\'s seven cards are dealt face up and split by a fixed set of rules before you touch your own hand. You get to see exactly what you\'re up against while you decide.',
+  '<div style="text-align:center;"><div class="hand-label">Dealer</div><div class="hand-row" style="justify-content:center;">'+
+    cardHTML('9','♠','anim-flip')+cardHTML('K','♦','anim-flip')+cardHTML('J','♥','anim-flip')+cardHTML('7','♣','anim-flip')+cardHTML('4','♠','anim-flip')+
+    '<div style="width:16px;"></div>'+
+    cardHTML('3','♦','anim-flip')+cardHTML('2','♥','anim-flip')+
+  '</div><div class="hand-total anim-fade" style="font-size:14px;">Dealer sets &mdash; High: King high &nbsp;|&nbsp; Low: 3-2 high</div></div>');
+
+renderScene(pgContainer, 5, 'Setting your own hand', 'Pick two cards for your low hand; the other five become your high hand automatically. Keep a pair together when you can &mdash; it\'s almost always stronger than breaking it up.',
+  '<div style="text-align:center;"><div class="hand-row" style="justify-content:center;">'+
+    cardHTML('Q','♠','anim-deal value-highlight')+cardHTML('Q','♥','anim-deal value-highlight')+cardHTML('9','♦','anim-deal')+cardHTML('6','♣','anim-deal')+cardHTML('4','♠','anim-deal')+
+    '<div style="width:16px;"></div>'+
+    cardHTML('A','♥','anim-deal')+cardHTML('J','♦','anim-deal')+
+  '</div><div class="hand-total anim-fade" style="font-size:14px;">High: Pair of Queens &nbsp;|&nbsp; Low: Ace-Jack</div></div>');
+
+renderScene(pgContainer, 6, 'Win both, lose both, or push', 'Beat both of the dealer\'s hands and you win the bet outright. Win one and lose the other and it\'s a push &mdash; your bet just comes back. Lose or tie both hands and you lose.',
+  '<div style="text-align:center;">'+
+    '<div style="display:flex;gap:28px;justify-content:center;">'+
+      '<div><div class="hand-label">Your High</div><div class="hand-row">'+cardHTML('A','♠')+cardHTML('A','♥')+'</div><div class="hand-total win anim-fade" style="font-size:14px;">Wins</div></div>'+
+      '<div><div class="hand-label">Your Low</div><div class="hand-row">'+cardHTML('4','♦')+cardHTML('2','♣')+'</div><div class="hand-total anim-fade" style="font-size:14px;color:var(--coral);">Loses</div></div>'+
+    '</div>'+
+    '<span class="win-tag anim-fade" style="background:rgba(91,141,224,0.15);color:var(--dusty-blue);border:1px solid rgba(91,141,224,0.3);margin-top:10px;">Push</span>'+
+  '</div>');
+
+renderScene(pgContainer, 7, 'When the dealer can\'t even make a pair', 'If the dealer\'s best possible hand is just an ace on top with no pair anywhere in the seven cards, that\'s an "Ace-High Pai Gow." Your whole bet pushes automatically, no matter what you were dealt.',
+  '<div style="text-align:center;"><div class="hand-label">Dealer\'s best five</div><div class="hand-row">'+cardHTML('A','♠')+cardHTML('K','♥')+cardHTML('J','♦')+cardHTML('9','♣')+cardHTML('6','♠')+'</div><div class="hand-total anim-fade" style="font-size:14px;">Ace high, no pair</div><span class="win-tag anim-fade" style="background:rgba(91,141,224,0.15);color:var(--dusty-blue);border:1px solid rgba(91,141,224,0.3);">Automatic push</span></div>');
+
+renderScene(pgContainer, 8, 'No commission on wins', 'Some Pai Gow tables take a 5% cut out of every win. This one doesn\'t &mdash; bet $100, win, and the full $100 is yours.',
+  '<div style="text-align:center;">'+betChip('Ante','$100','anim-deal')+'<div class="hand-total win anim-fade" style="margin-top:14px;">+$100 &mdash; no cut taken</div></div>');
+
+renderScene(pgContainer, 9, 'Two optional bonus bets', 'Fortune Bonus pays out on your own seven cards alone, win or lose against the dealer. Ace-High Bonus pays when the dealer gets forced into that automatic-push hand.',
+  '<div style="display:flex;gap:16px;">'+betChip('Fortune','$10','anim-deal')+betChip('Ace-High','$10','anim-deal')+'</div>');
+
 var uthContainer = document.getElementById('uth-scenes');
 
 renderScene(uthContainer, 1, 'The goal', 'You and the dealer each get two cards. Five community cards are shared between you both. Build the best five-card hand you can &mdash; any mix of your own cards and the board &mdash; and beat the dealer.',
@@ -376,6 +449,7 @@ function switchGame(game){
 }
 document.getElementById('switch-blackjack').addEventListener('click', function(){ switchGame('blackjack'); });
 document.getElementById('switch-baccarat').addEventListener('click', function(){ switchGame('baccarat'); });
+document.getElementById('switch-paigow').addEventListener('click', function(){ switchGame('paigow'); });
 document.getElementById('switch-uth').addEventListener('click', function(){ switchGame('uth'); });
 
 var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
