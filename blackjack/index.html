@@ -33,7 +33,15 @@
 *{box-sizing:border-box;}
 body{margin:0;background:var(--felt-dark);color:var(--text);font-family:'Inter',sans-serif;padding:28px 16px 64px;-webkit-font-smoothing:antialiased;}
 :focus-visible{outline:2px solid var(--brass-bright);outline-offset:2px;border-radius:4px;}
-.wrap{max-width:900px;margin:0 auto;}
+.wrap{max-width:900px;margin:0 auto;transition:max-width 200ms ease;}
+.layout-grid{display:block;}
+.side-panels{display:block;}
+.side-panels .panel:last-child{margin-bottom:0;}
+@media(min-width:1320px){
+  .wrap{max-width:1300px;}
+  .layout-grid{display:grid;grid-template-columns:900px 1fr;gap:20px;align-items:start;}
+  .side-panels{display:block;position:sticky;top:20px;}
+}
 h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:30px;margin:0;letter-spacing:-0.4px;}
 .tagline{color:var(--text-muted);font-size:13.5px;margin:5px 0 0;letter-spacing:0.1px;}
 .back-link{display:inline-flex;align-items:center;gap:7px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:-0.1px;text-decoration:none;color:var(--text-muted);margin-bottom:14px;transition:color 140ms ease;}
@@ -63,7 +71,7 @@ body.tooltips-off .term .tip{display:none !important;}
 .hint-line.show{opacity:1;}
 .check-row input{accent-color:var(--brass);}
 .side-note{font-size:11.5px;color:var(--text-muted);margin-top:10px;line-height:1.55;}
-.table-felt{position:relative;background:radial-gradient(ellipse 110% 60% at 50% 0%, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 55%),radial-gradient(ellipse 130% 90% at 50% 100%, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 62%),linear-gradient(180deg, #131519 0%, var(--felt) 100%);border:1px solid var(--line);border-radius:20px;padding:26px 22px;box-shadow:0 1px 0 rgba(255,255,255,0.03) inset,0 20px 40px -24px rgba(0,0,0,0.6);}
+.table-felt{position:relative;margin-bottom:16px;background:radial-gradient(ellipse 110% 60% at 50% 0%, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 55%),radial-gradient(ellipse 130% 90% at 50% 100%, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 62%),linear-gradient(180deg, #131519 0%, var(--felt) 100%);border:1px solid var(--line);border-radius:20px;padding:26px 22px;box-shadow:0 1px 0 rgba(255,255,255,0.03) inset,0 20px 40px -24px rgba(0,0,0,0.6);}
 .count-bar{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:18px;font-size:13px;align-items:center;}
 .count-bar .k{color:var(--text-muted);}
 .count-bar .v{font-weight:600;font-size:15px;margin-left:5px;font-family:'Space Grotesk',sans-serif;}
@@ -184,6 +192,7 @@ h2.section{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px
     </div>
     <button id="btn-toggle-settings">Table settings</button>
     <a href="#" id="btn-manners" style="font-size:11.5px;color:var(--text-muted);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Table manners</a>
+    <a href="/learn/glossary/" style="font-size:11.5px;color:var(--text-muted);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Glossary</a>
   </div>
 </header>
 
@@ -246,6 +255,7 @@ h2.section{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px
     <div>
       <p class="side-note" style="margin:0 0 8px;color:var(--text);font-weight:600;">Surrender</p>
       <div class="check-row"><input type="checkbox" id="set-surrender"><label for="set-surrender">Allow late <span class="term">surrender<span class="tip">Give up your hand immediately and get half your bet back, before playing it out.</span></span> (forfeit half your bet)</label></div>
+      <div class="check-row"><input type="checkbox" id="set-splitanytens"><label for="set-splitanytens"><span class="term">Split any two 10-value cards<span class="tip">Most tables allow splitting any Jack, Queen, King, or 10 together — not just a matching pair. Basic strategy still says stand, but the option is realistic to have.</span></span></label></div>
     </div>
     <div>
       <p class="side-note" style="margin:0 0 8px;color:var(--text);font-weight:600;">Odds</p>
@@ -282,6 +292,7 @@ h2.section{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px
   <p class="side-note">Double Down Madness: you start with just one card, can hit or double repeatedly in any order (doubling doesn't end your turn), no splitting — but if your first card is an ace, you get exactly one more card no matter what. Dealer busting on exactly 22 pushes your bets instead of paying them. Free Bet Blackjack: doubles on hard 9/10/11 and splits (except tens) cost nothing extra — in exchange, any dealer bust on exactly 22 pushes your remaining hands instead of paying them. Side bet paytables are common versions — casinos vary.</p>
 </div>
 
+<div class="layout-grid">
 <div class="table-felt">
   <div id="tablesetup-overlay" style="display:none;position:absolute;inset:0;background:rgba(6,7,8,0.94);border-radius:20px;z-index:21;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;">
     <p style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;margin:0 0 6px;">Set up the table</p>
@@ -392,6 +403,7 @@ h2.section{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px
   <div id="result-zone"></div>
 </div>
 
+<div class="side-panels">
 <div class="panel" id="seen-panel" style="display:none;">
   <h2 class="section">Cards seen this shoe</h2>
   <table class="tallytable" id="seen-table"></table>
@@ -429,7 +441,9 @@ h2.section{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px
   <div style="overflow-x:auto;">
     <table class="chart" id="chart-table"></table>
   </div>
-  <p class="foot-note">This is baseline basic strategy for a dealer-stands-on-soft-17 game. A few count-based deviations (the most valuable ones — insurance, 16 vs 10, 15 vs 10, 10 vs 10) are called out live in the feedback when your true count crosses their index.</p>
+  <p class="foot-note">This is baseline basic strategy for a dealer-stands-on-soft-17 game, checked against the standard S17 table. The insurance, hard 16 vs 10, and hard 15 vs 10 count-based deviations called out live are among the highest-value entries in Don Schlesinger's published "Illustrious 18" (Blackjack Attack). The pair-of-tens-vs-10 double at +6 is a more niche play included for completeness, not one of the core 18.</p>
+</div>
+</div>
 </div>
 
 <p class="foot-note" style="text-align:center;opacity:0.6;margin-top:8px;">For education only — a free practice table, not real-money gambling.</p>
@@ -585,7 +599,7 @@ function T(ms){ return G.turbo ? 0 : ms; }
 var G={
   decks:2, payout:1.5, variant:'standard', hitSoft17:true,
   sidebets:{pp:false,tp:false,tl:false,bb:false},
-  showCount:true, showSeen:false, turbo:false, insuranceEnabled:false, insuranceBet:0, showOdds:true, surrenderEnabled:false, drillsMode:false, soundOn:true, showDeviations:false, needsReshuffle:false, cutCardThreshold:0,
+  showCount:true, showSeen:false, turbo:false, insuranceEnabled:false, insuranceBet:0, showOdds:true, surrenderEnabled:false, splitAnyTens:false, drillsMode:false, soundOn:true, showDeviations:false, needsReshuffle:false, cutCardThreshold:0,
   multiplayerEnabled:true, numBots:0, userSeatIndex:0, bots:[], dealerHadNaturalBJ:false, dealerStreak:0, tableReactionsEnabled:true, tooltipsEnabled:true, userWinStreak:0, seenFirstHandHints:false, seenChipsHint:false,
   shoe:[], runningCount:0, seenTally:{},
   bankroll:1000, phase:'betting',
@@ -707,6 +721,7 @@ function showHintStaggered(id, appearDelay, visibleDuration){
   }, appearDelay);
 }
 function maybeShowFirstHandHints(){
+  return; // disabled for now -- too much overlapping text, fading too fast to actually read
   if(G.seenFirstHandHints || G.history.length>0) return;
   G.seenFirstHandHints = true;
   showHintStaggered('hint-goal', 0, 4500);
@@ -715,6 +730,7 @@ function maybeShowFirstHandHints(){
   saveSession();
 }
 function maybeShowChipsHint(){
+  return; // disabled for now -- too much overlapping text, fading too fast to actually read
   if(G.seenChipsHint || G.history.length>0) return;
   G.seenChipsHint = true;
   showHintStaggered('hint-chips', 400, 5000);
@@ -999,7 +1015,8 @@ function renderBots(){
 function classifyHand(cards, dealerR, allowSurrender, allowPair){
   if(allowPair===undefined) allowPair=true;
   var colIdx = dealerR==='A'?9:(rankVal(dealerR)===10?8:(rankVal(dealerR)-2));
-  if(allowPair && cards.length===2 && cards[0].r===cards[1].r){
+  var isPairMatch = cards.length===2 && (cards[0].r===cards[1].r || (G.splitAnyTens && cards[0].v===10 && cards[1].v===10));
+  if(allowPair && isPairMatch){
     var label = cards[0].r==='A'?'A,A':(cards[0].v===10?'10,10':cards[0].r+','+cards[0].r);
     var rowIdx=PAIR_ROWS.indexOf(label);
     return {kind:'pair', rowIdx:rowIdx, colIdx:colIdx, action:PAIR[rowIdx][colIdx]};
@@ -1079,6 +1096,7 @@ function readSettings(){
   G.turbo=document.getElementById('set-turbo').checked;
   G.insuranceEnabled=document.getElementById('set-insurance').checked;
   G.surrenderEnabled=document.getElementById('set-surrender').checked;
+  G.splitAnyTens=document.getElementById('set-splitanytens').checked;
   G.showOdds=document.getElementById('set-showodds').checked;
   G.drillsMode=document.getElementById('set-drills').checked;
   G.soundOn=document.getElementById('set-sound').checked;
@@ -1095,7 +1113,7 @@ function readSettings(){
   renderCountBar();
 }
 
-['set-decks','set-payout','set-variant','set-hitsoft17','sb-pp','sb-tp','sb-tl','sb-bb','set-showcount','set-showseen','set-turbo','set-insurance','set-surrender','set-showodds','set-drills','set-sound','set-showdeviations','set-multiplayer','set-tablereactions','set-tooltips'].forEach(function(id){
+['set-decks','set-payout','set-variant','set-hitsoft17','sb-pp','sb-tp','sb-tl','sb-bb','set-showcount','set-showseen','set-turbo','set-insurance','set-surrender','set-splitanytens','set-showodds','set-drills','set-sound','set-showdeviations','set-multiplayer','set-tablereactions','set-tooltips'].forEach(function(id){
   document.getElementById(id).addEventListener('change', function(){
     readSettings();
     if(id==='set-decks'){ buildShoe(); }
@@ -1140,7 +1158,7 @@ function saveSession(){
       settings:{
         decks:G.decks, payout:G.payout, variant:G.variant, hitSoft17:G.hitSoft17,
         sidebets:G.sidebets, showCount:G.showCount, showSeen:G.showSeen, turbo:G.turbo,
-        insuranceEnabled:G.insuranceEnabled, showOdds:G.showOdds, surrenderEnabled:G.surrenderEnabled,
+        insuranceEnabled:G.insuranceEnabled, showOdds:G.showOdds, surrenderEnabled:G.surrenderEnabled, splitAnyTens:G.splitAnyTens,
         drillsMode:G.drillsMode, soundOn:G.soundOn, showDeviations:G.showDeviations, multiplayerEnabled:G.multiplayerEnabled, tableReactionsEnabled:G.tableReactionsEnabled, tooltipsEnabled:G.tooltipsEnabled
       }
     };
@@ -1187,6 +1205,7 @@ function applyLoadedSession(){
     document.getElementById('set-insurance').checked=!!s.insuranceEnabled;
     document.getElementById('set-showodds').checked=!!s.showOdds;
     document.getElementById('set-surrender').checked=!!s.surrenderEnabled;
+    document.getElementById('set-splitanytens').checked=!!s.splitAnyTens;
     document.getElementById('set-drills').checked=!!s.drillsMode;
     document.getElementById('set-sound').checked=!!s.soundOn;
     document.getElementById('set-showdeviations').checked=!!s.showDeviations;
@@ -1790,7 +1809,10 @@ function canDouble(h){
   return h.cards.length===2;
 }
 function canSplit(h){
-  return G.variant!=='ddm' && h.cards.length===2 && h.cards[0].r===h.cards[1].r && G.hands.length<4;
+  if(G.variant==='ddm' || h.cards.length!==2 || G.hands.length>=4) return false;
+  if(h.cards[0].r===h.cards[1].r) return true;
+  if(G.splitAnyTens && h.cards[0].v===10 && h.cards[1].v===10) return true;
+  return false;
 }
 function isFreeDouble(h){
   if(G.variant!=='freebet') return false;
@@ -1813,15 +1835,17 @@ function doAction(action){
   var h=currentHand();
   var cls=classifyHand(h.cards, G.dealer.cards[0].r, !h.fromSplit);
   G.lastClass=cls;
-  var doubleUnavailable = cls.action==='D' && !canDouble(h);
-  var effectiveAction = doubleUnavailable ? 'H' : cls.action;
+  var effectiveAction = cls.action;
   if(G.drillsMode){
     var devAction=deviationOverride(h.cards, G.dealer.cards[0].r);
     if(devAction) effectiveAction=devAction;
   }
+  var doubleUnavailable = effectiveAction==='D' && !canDouble(h);
+  var doubleUnaffordable = effectiveAction==='D' && canDouble(h) && !canAffordDouble(h);
+  if(doubleUnavailable || doubleUnaffordable){ effectiveAction = 'H'; }
   var correct = action===effectiveAction;
   var note=deviationNote(h.cards, G.dealer.cards[0].r);
-  showFeedback(action, cls, effectiveAction, correct, note, doubleUnavailable, h, G.dealer.cards[0].r);
+  showFeedback(action, cls, effectiveAction, correct, note, doubleUnavailable, doubleUnaffordable, h, G.dealer.cards[0].r);
 
   if(action==='R'){
     if(!canSurrender(h)) return;
@@ -2114,11 +2138,12 @@ function personalizedReason(cls, h, dealerR, effectiveAction){
   return 'Hitting hard '+t.total+' against a dealer '+dl+' is right — your total is fragile enough (one ten-value card away from busting) that it still needs to improve, even though a '+dl+' upcard gives the dealer a real chance to bust too.';
 }
 
-function showFeedback(action, cls, effectiveAction, correct, note, doubleUnavailable, h, dealerR){
+function showFeedback(action, cls, effectiveAction, correct, note, doubleUnavailable, doubleUnaffordable, h, dealerR){
   var z=document.getElementById('feedback-zone');
   var reason = personalizedReason(cls, h, dealerR, effectiveAction);
   var extra = (doubleUnavailable?'This spot is normally a double, but you can only double on your first two cards — since this hand already took a hit, hit is the next-best play.':'') +
-              (note?(doubleUnavailable?' ':'')+note:'');
+              (doubleUnaffordable?'This spot is normally a double, but your bankroll isn\u2019t enough to cover it right now — hit is the next-best play.':'') +
+              (note?((doubleUnavailable||doubleUnaffordable)?' ':'')+note:'');
   var html = '<div class="feedback '+(correct?'correct':'wrong')+'">'+
     '<p class="ft">'+(correct?'Correct — ':'Basic strategy says ')+ACTION_NAME[effectiveAction]+(correct?'':' (you chose '+ACTION_NAME[action]+')')+'</p>'+
     '<p style="margin:0;">'+reason+'</p>'+
