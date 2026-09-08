@@ -1439,13 +1439,29 @@ function personalizeFlop(hole, board, hint){
   if(hint.key==='flushdraw') return 'Your flop gave you a four-card flush draw using a hidden ten-or-better. '+hint.reason+' '+rule;
   return 'Your flop gave you just '+handName+' so far \u2014 '+hint.reason+' '+rule;
 }
+function signedMoney(n){
+  var rounded=Math.round(Math.abs(n));
+  return (n<0?'-':'')+'$'+rounded.toLocaleString('en-US');
+}
 function personalizeRiver(hole, board, hint){
   var handName='<span class="hand-mention">'+evaluate7(hole.concat(board)).name+'</span>';
   var pct=Math.round((hint.dealerWinCombos/hint.totalCombos)*1000)/10;
   var oddsPhrase='<span class="odds-mention">'+hint.dealerWinCombos+' of the dealer\u2019s '+hint.totalCombos+' possible hands ('+pct+'%)</span>';
-  var method='This isn\u2019t a rule of thumb \u2014 every one of the '+hint.totalCombos+' possible dealer hole-card combinations was individually evaluated against your exact hand to compute this.';
-  if(hint.action==='bet') return 'With all 7 cards out, you have '+handName+'. Only '+oddsPhrase+' would beat you \u2014 betting has the higher expected value, even though the dealer still wins some of the time. '+method;
-  return 'With all 7 cards out, you have '+handName+'. '+oddsPhrase+' would beat you \u2014 too many for betting to pay off on average, so folding loses less. '+method;
+  var anteBlindSum=formatMoney(-hint.foldEV);
+  var playAmt=formatMoney(G.bets.ante);
+  var betEVStr=signedMoney(hint.betEV);
+  var foldEVStr=signedMoney(hint.foldEV);
+  var method='Every one of the '+hint.totalCombos+' possible dealer hole-card combinations was individually evaluated to compute this \u2014 it\u2019s not a rule of thumb.';
+  if(hint.action==='bet'){
+    return 'With all 7 cards out, you have '+handName+'. The dealer beats you '+oddsPhrase+' \u2014 a real majority, and that\u2019s worth being honest about. '+
+      'But folding already loses your Ante and Blind ('+anteBlindSum+') no matter what, so the only thing actually at stake in this decision is the extra '+playAmt+' Play bet. '+
+      'Win, and Ante, Play, and often Blind all pay out together; lose, and you only give up that one extra bet beyond what folding already costs. '+
+      'Averaged across every possible dealer hand, that makes betting worth '+betEVStr+' on average versus '+foldEVStr+' for folding \u2014 betting genuinely loses less, even at this win rate. '+
+      'A pair or better is usually enough to clear this bar on its own, regardless of how many dealer hands beat it. '+method;
+  }
+  return 'With all 7 cards out, you have '+handName+'. '+oddsPhrase+' would beat you \u2014 too many for the extra '+playAmt+' Play bet to pay off. '+
+    'Folding loses your Ante and Blind either way, but betting would risk that additional amount on top of it, and at this win rate the extra losses outweigh the extra wins. '+
+    'Averaged across every possible dealer hand, folding nets '+foldEVStr+' on average versus '+betEVStr+' for betting \u2014 folding genuinely loses less here. '+method;
 }
 function computeCurrentHint(){
   if(G.phase==='preflop'){
@@ -1858,12 +1874,14 @@ function showHintStaggered(id, appearDelay, visibleDuration){
   }, appearDelay);
 }
 function maybeShowChipsHint(){
+  return; // disabled for now -- too much overlapping text, fading too fast to actually read
   if(G.seenChipsHint) return;
   G.seenChipsHint=true;
   saveHintState();
   showHintStaggered('hint-chips', 400, 5000);
 }
 function maybeShowBasicsHint(){
+  return; // disabled for now -- too much overlapping text, fading too fast to actually read
   if(G.seenBasicsHint) return;
   G.seenBasicsHint=true;
   saveHintState();
