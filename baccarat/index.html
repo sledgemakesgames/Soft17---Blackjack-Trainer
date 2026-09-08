@@ -34,7 +34,16 @@
 body{margin:0;background:var(--felt-dark);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;padding:28px 16px 64px;}
 a{color:inherit;}
 :focus-visible{outline:2px solid var(--brass-bright);outline-offset:2px;border-radius:4px;}
-.wrap{max-width:920px;margin:0 auto;}
+.wrap{max-width:920px;margin:0 auto;transition:max-width 200ms ease;}
+.layout-grid{display:block;}
+.side-panels{display:block;}
+.side-panels .panel{margin-bottom:16px;}
+.side-panels .panel:last-child{margin-bottom:0;}
+@media(min-width:1340px){
+  .wrap{max-width:1320px;}
+  .layout-grid{display:grid;grid-template-columns:920px 1fr;gap:20px;align-items:start;}
+  .side-panels{display:block;position:sticky;top:20px;}
+}
 button{font-family:'Inter',sans-serif;background:var(--panel-2);color:var(--text);border:1px solid var(--line);border-radius:9px;padding:9px 14px;font-size:13px;cursor:pointer;transition:border-color 140ms ease,background 140ms ease;}
 button:hover{border-color:rgba(237,238,240,0.22);}
 button.primary{background:var(--brass);color:#20160A;border:none;font-weight:600;}
@@ -65,7 +74,7 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;letter-
 body.tooltips-off .term{border-bottom:none;cursor:inherit;}
 body.tooltips-off .term .tip{display:none !important;}
 
-.table-felt{position:relative;background:radial-gradient(ellipse 110% 60% at 50% 0%, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 55%),radial-gradient(ellipse 130% 90% at 50% 100%, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 62%),linear-gradient(180deg, #131519 0%, var(--felt) 100%);border:1px solid var(--line);border-radius:20px;padding:18px 18px;box-shadow:0 1px 0 rgba(255,255,255,0.03) inset,0 20px 40px -24px rgba(0,0,0,0.6);}
+.table-felt{position:relative;margin-bottom:16px;background:radial-gradient(ellipse 110% 60% at 50% 0%, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 55%),radial-gradient(ellipse 130% 90% at 50% 100%, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 62%),linear-gradient(180deg, #131519 0%, var(--felt) 100%);border:1px solid var(--line);border-radius:20px;padding:18px 18px;box-shadow:0 1px 0 rgba(255,255,255,0.03) inset,0 20px 40px -24px rgba(0,0,0,0.6);}
 
 .hands-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;}
 .hand-box{background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:16px;min-height:196px;transition:border-color 220ms ease,box-shadow 220ms ease;}
@@ -177,6 +186,7 @@ body.tooltips-off .term .tip{display:none !important;}
 .mini-chip:first-child{margin-left:0;}
 .chip-hint{text-align:center;font-size:11.5px;color:var(--text-muted);margin-bottom:8px;}
 .hint-line{font-size:12px;color:var(--brass-bright);font-style:italic;text-align:center;margin:4px 0;opacity:0;transition:opacity 400ms ease;}
+.hint-line.show{opacity:1;}
 .chip-hint b{color:var(--brass-bright);}
 
 .deal-row{display:flex;justify-content:center;gap:10px;margin-bottom:6px;}
@@ -267,6 +277,7 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
   </div>
 </div>
 
+<div class="layout-grid">
 <div class="table-felt">
   <div id="bankroll-empty" class="bankroll-empty-banner" style="display:none;">
     <span style="font-size:13.5px;">You're out of chips. This is a free practice table — reset your bankroll to keep going.</span>
@@ -303,15 +314,6 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
 
   <div class="outcome-badge" id="outcome-badge"></div>
   <div class="why-panel" id="why-panel"></div>
-
-  <div class="road-panel">
-    <div class="road-head">
-      <span class="road-title">The Road</span>
-      <span class="road-explain" id="road-explain-text">One dot per hand — red Banker, blue Player, hollow green Tie. Fills top to bottom, then starts a new column.</span>
-    </div>
-    <div class="board-tabs" id="board-tabs"></div>
-    <div class="road-grid" id="road-grid"></div>
-  </div>
 
   <div class="hand-detail-overlay" id="hand-detail-overlay" style="display:none;">
     <div class="hand-detail-card">
@@ -402,8 +404,6 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
     <button class="primary" id="btn-deal">Deal</button>
   </div>
 
-  <div id="stats-grid" class="stats-flat"></div>
-
   <div id="manners-overlay" style="display:none;position:absolute;inset:0;background:rgba(6,7,8,0.94);border-radius:20px;z-index:22;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;">
     <p style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;margin:0 0 6px;">Table manners</p>
     <p style="font-size:12.5px;color:var(--text-muted);margin:0 0 18px;max-width:340px;">A few real-table habits worth knowing before you sit down at baccarat.</p>
@@ -418,6 +418,25 @@ footer{padding:24px 0 10px;text-align:center;font-size:12px;color:var(--text-mut
   </div>
 </div>
 
+<div class="side-panels">
+<div class="panel">
+  <div class="road-head">
+    <span class="road-title">The Road</span>
+    <span class="road-explain" id="road-explain-text">One dot per hand — red Banker, blue Player, hollow green Tie. Fills top to bottom, then starts a new column.</span>
+  </div>
+  <div class="board-tabs" id="board-tabs"></div>
+  <div class="road-grid" id="road-grid"></div>
+</div>
+
+<div class="panel">
+  <h2 class="section">Session</h2>
+  <div id="stats-grid" class="stats-flat"></div>
+</div>
+</div>
+
+</div>
+
+<p class="foot-note" style="text-align:center;opacity:0.6;">The third-card draw rules follow the standard baccarat tableau used industry-wide. Dragon 7 (40:1) and Panda 8 (25:1) match their standard EZ Baccarat paytables, cross-checked against Wizard of Odds' published figures.</p>
 <footer>For education only — a free practice table, not real-money gambling.<br>© 2026 SledgeMakesGames. All rights reserved.</footer>
 </div>
 
@@ -779,12 +798,14 @@ function showHintStaggered(id, appearDelay, visibleDuration){
   }, appearDelay);
 }
 function maybeShowChipsHint(){
+  return; // disabled for now -- too much overlapping text, fading too fast to actually read
   if(G.seenChipsHint) return;
   G.seenChipsHint=true;
   showHintStaggered('hint-chips', 400, 5000);
   saveHintsSeen();
 }
 function maybeShowBasicsHint(){
+  return; // disabled for now -- too much overlapping text, fading too fast to actually read
   if(G.seenBasicsHint) return;
   G.seenBasicsHint=true;
   showHintStaggered('hint-goal', 0, 4500);
